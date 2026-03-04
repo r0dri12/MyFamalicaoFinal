@@ -1,0 +1,101 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFamalicão - O teu Guia Interativo</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="stylesheet" href="main_style.css">
+</head>
+<body>
+
+    <!-- Navegação Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.php" class="nav-logo">
+                <i class="ph-fill ph-map-pin-line"></i>
+                <span>MyFamalicão</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.php" class="active">Início</a>
+                <a href="sobre.php">Sobre a PAP</a>
+                <a href="destaques.php">Destaques</a>
+            </div>
+
+            <div class="nav-auth">
+                <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+                    <span class="user-greeting">Olá, <?php echo htmlspecialchars($_SESSION["username"]); ?>!</span>
+                    <a href="map.php" class="btn btn-primary-sm">Abrir Mapa</a>
+                    <a href="logout.php" class="btn btn-danger-sm"><i class="ph-bold ph-sign-out"></i></a>
+                <?php else: ?>
+                    <a href="login.php" class="btn btn-outline">Entrar</a>
+                    <a href="register.php" class="btn btn-primary-sm">Criar Conta</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section / Cabeçalho -->
+    <header class="hero">
+        <div class="hero-content">
+            <span class="badge">Projeto PAP 2025/2026</span>
+            <h1>Descobre Vila Nova de Famalicão<br><span>ao teu ritmo.</span></h1>
+            <p>A primeira Web App que te permite criar roteiros personalizados pela cidade e abri-los diretamente no teu GPS.</p>
+            
+            <div class="hero-actions">
+                <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+                    <a href="map.php" class="btn btn-hero btn-primary">
+                        <i class="ph-bold ph-map-trifold"></i> Começar a Explorar
+                    </a>
+                <?php else: ?>
+                    <a href="register.php" class="btn btn-hero btn-primary">
+                        Junta-te a nós <i class="ph-bold ph-arrow-right"></i>
+                    </a>
+                <?php endif; ?>
+                <a href="sobre.php" class="btn btn-hero btn-secondary">Saber Mais</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <!-- Imagem de fundo representativa ou mockup da app -->
+            <img src="https://images.unsplash.com/photo-1548625361-ec8571ea7ab0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Famalicão">
+        </div>
+    </header>
+
+    <!-- Funcionalidades / Features -->
+    <section class="features">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="ph-fill ph-map-pin-plus"></i></div>
+            <h3>Cria a tua Rota</h3>
+            <p>Seleciona os pontos que queres visitar e adiciona-os ao teu roteiro personalizado.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="ph-fill ph-export"></i></div>
+            <h3>Exporta para o GPS</h3>
+            <p>Gera um link automático para abrires a tua rota no Google Maps e começares a viagem.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="ph-fill ph-speaker-high"></i></div>
+            <h3>Áudio-Guia</h3>
+            <p>Acessibilidade para todos! Ouve a história de cada ponto por onde passas. <span class="soon-badge">Em Breve</span></p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; <?php echo date("Y"); ?> MyFamalicão. PAP de Rodrigo de Frutuoso.</p>
+    </footer>
+
+</body>
+</html>
