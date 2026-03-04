@@ -34,6 +34,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
     <title>Os Meus Locais - MyFamalicão</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -357,15 +358,15 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <span>MyFamalicão</span>
             </a>
             <div class="nav-links">
-                <a href="index.php">Início</a>
-                <a href="sobre.php">Sobre a PAP</a>
-                <a href="destaques.php">Destaques</a>
-                <a href="meus_locais.php" class="active">Meus Locais</a>
+                <a href="index">Início</a>
+                <a href="sobre">Sobre a PAP</a>
+                <a href="destaques">Destaques</a>
+                <a href="meus_locais" class="active">Meus Locais</a>
             </div>
             <div class="nav-auth" style="display: flex; gap: 12px; align-items: center;">
-                <a href="settings.php" class="user-greeting" style="font-weight: 600;"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($username); ?></a>
-                <a href="map.php" class="btn btn-primary-sm">Mapa</a>
-                <a href="logout.php" class="btn btn-danger-sm" title="Sair"><i class="ph-bold ph-sign-out"></i></a>
+                <a href="settings" class="user-greeting" style="font-weight: 600;"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($username); ?></a>
+                <a href="map" class="btn btn-primary-sm">Mapa</a>
+                <a href="logout" class="btn btn-danger-sm" title="Sair"><i class="ph-bold ph-sign-out"></i></a>
             </div>
         </div>
     </nav>
@@ -381,7 +382,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <i class="ph ph-magnifying-glass"></i>
                 <input type="text" name="search" class="search-input" placeholder="Pesquisar por nome, tipo ou descrição..." value="<?php echo htmlspecialchars($search); ?>">
             </form>
-            <a href="map.php" class="btn btn-primary"><i class="ph-bold ph-plus"></i> Novo Local no Mapa</a>
+            <a href="map" class="btn btn-primary"><i class="ph-bold ph-plus"></i> Novo Local no Mapa</a>
         </div>
 
         <div class="poi-grid">
@@ -419,7 +420,7 @@ else: ?>
                     <i class="ph ph-map-trifold"></i>
                     <h3>Nenhum local encontrado</h3>
                     <p>Ainda não criaste nenhum ponto ou as pesquisas não retornaram resultados.</p>
-                    <a href="map.php" class="btn btn-primary">Começar a Explorar</a>
+                    <a href="map" class="btn btn-primary">Começar a Explorar</a>
                 </div>
             <?php
 endif; ?>

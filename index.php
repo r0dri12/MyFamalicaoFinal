@@ -6,6 +6,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
     <title>MyFamalicão - O teu Guia Interativo</title>
 
     <!-- Google Fonts: Inter -->
@@ -23,30 +24,30 @@ session_start();
     <!-- Navegação Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.php" class="nav-logo">
+            <a href="index" class="nav-logo">
                 <i class="ph-fill ph-map-pin-line"></i>
                 <span>MyFamalicão</span>
             </a>
 
             <div class="nav-links">
-                <a href="index.php" class="active">Início</a>
-                <a href="sobre.php">Sobre a PAP</a>
-                <a href="destaques.php">Destaques</a>
+                <a href="index" class="active">Início</a>
+                <a href="sobre">Sobre a PAP</a>
+                <a href="destaques">Destaques</a>
                 <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                <a href="meus_locais.php">Meus Locais</a>
+                <a href="meus_locais">Meus Locais</a>
                 <?php
 endif; ?>
             </div>
 
             <div class="nav-auth">
                 <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                    <a href="settings.php" class="user-greeting" style="font-weight: 600; color: var(--text-main);"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($_SESSION["username"]); ?></a>
-                    <a href="map.php" class="btn btn-primary-sm">Abrir Mapa</a>
-                    <a href="logout.php" class="btn btn-danger-sm"><i class="ph-bold ph-sign-out"></i></a>
+                    <a href="settings" class="user-greeting" style="font-weight: 600; color: var(--text-main);"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($_SESSION["username"]); ?></a>
+                    <a href="map" class="btn btn-primary-sm">Abrir Mapa</a>
+                    <a href="logout" class="btn btn-danger-sm"><i class="ph-bold ph-sign-out"></i></a>
                 <?php
 else: ?>
-                    <a href="login.php" class="btn btn-outline">Entrar</a>
-                    <a href="register.php" class="btn btn-primary-sm">Criar Conta</a>
+                    <a href="login" class="btn btn-outline">Entrar</a>
+                    <a href="register" class="btn btn-primary-sm">Criar Conta</a>
                 <?php
 endif; ?>
             </div>
@@ -62,22 +63,22 @@ endif; ?>
             
             <div class="hero-actions">
                 <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                    <a href="map.php" class="btn btn-hero btn-primary">
+                    <a href="map" class="btn btn-hero btn-primary">
                         <i class="ph-bold ph-map-trifold"></i> Começar a Explorar
                     </a>
                 <?php
 else: ?>
-                    <a href="register.php" class="btn btn-hero btn-primary">
+                    <a href="register" class="btn btn-hero btn-primary">
                         Junta-te a nós <i class="ph-bold ph-arrow-right"></i>
                     </a>
                 <?php
 endif; ?>
-                <a href="sobre.php" class="btn btn-hero btn-secondary">Saber Mais</a>
+                <a href="sobre" class="btn btn-hero btn-secondary">Saber Mais</a>
             </div>
         </div>
         <div class="hero-image">
             <!-- Imagem de fundo representativa ou mockup da app -->
-            <img src="https://images.unsplash.com/photo-1548625361-ec8571ea7ab0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Famalicão">
+            <img src="https://imagens.supercasa.pt/Z1280x960/OAYES/S5/C312/WP8338/Tphoto/ID92200000-0000-0500-0000-00000ecc2fb4.jpg" alt="Famalicão">
         </div>
     </header>
 

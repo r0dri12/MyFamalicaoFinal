@@ -1,0 +1,14 @@
+Options -Indexes
+RewriteEngine On
+
+# Remove .php extension from URLs
+# If the request is not a real file or directory...
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# ...try adding .php and serve it
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Redirect /page.php to /page (canonical – removes .php if typed in manually)
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+RewriteRule ^ /%1 [R=301,NE,L]

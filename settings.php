@@ -47,6 +47,7 @@ else {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
     <title>Definições - MyFamalicão</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -294,15 +295,15 @@ else {
                 <span>MyFamalicão</span>
             </a>
             <div class="nav-links">
-                <a href="index.php">Início</a>
-                <a href="sobre.php">Sobre a PAP</a>
-                <a href="destaques.php">Destaques</a>
-                <a href="map.php">Mapa</a>
-                <a href="meus_locais.php">Meus Locais</a>
+                <a href="index">Início</a>
+                <a href="sobre">Sobre a PAP</a>
+                <a href="destaques">Destaques</a>
+                <a href="map">Mapa</a>
+                <a href="meus_locais">Meus Locais</a>
             </div>
             <div class="nav-auth" style="display: flex; gap: 12px; align-items: center;">
-                <a href="settings.php" class="user-greeting" style="font-weight: 600;"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($user['username']); ?></a>
-                <a href="logout.php" class="btn btn-danger-sm" title="Sair"><i class="ph-bold ph-sign-out"></i></a>
+                <a href="settings" class="user-greeting" style="font-weight: 600;"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($user['username']); ?></a>
+                <a href="logout" class="btn btn-danger-sm" title="Sair"><i class="ph-bold ph-sign-out"></i></a>
             </div>
         </div>
     </nav>
@@ -344,7 +345,7 @@ endif; ?>
             <ul class="settings-nav">
                 <li><a href="#perfil" class="active"><i class="ph-bold ph-identification-card"></i> O Meu Perfil</a></li>
                 <li><a href="#atividade"><i class="ph-bold ph-chart-bar"></i> A Minha Atividade</a></li>
-                <li style="margin-top: 28px;"><a href="logout.php" class="danger"><i class="ph-bold ph-sign-out"></i> Terminar Sessão</a></li>
+                <li style="margin-top: 28px;"><a href="logout" class="danger"><i class="ph-bold ph-sign-out"></i> Terminar Sessão</a></li>
             </ul>
         </aside>
 

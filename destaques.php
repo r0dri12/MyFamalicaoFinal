@@ -6,6 +6,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
     <title>Destaques - MyFamalicão</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -114,30 +115,30 @@ session_start();
     <!-- Navegação Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.php" class="nav-logo">
+            <a href="index" class="nav-logo">
                 <i class="ph-fill ph-map-pin-line"></i>
                 <span>MyFamalicão</span>
             </a>
 
             <div class="nav-links">
-                <a href="index.php">Início</a>
-                <a href="sobre.php">Sobre a PAP</a>
-                <a href="destaques.php" class="active">Destaques</a>
+                <a href="index">Início</a>
+                <a href="sobre">Sobre a PAP</a>
+                <a href="destaques" class="active">Destaques</a>
                 <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                <a href="meus_locais.php">Meus Locais</a>
+                <a href="meus_locais">Meus Locais</a>
                 <?php
 endif; ?>
             </div>
 
             <div class="nav-auth">
                 <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                    <a href="settings.php" class="user-greeting" style="font-weight: 600; color: var(--text-main);"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($_SESSION["username"]); ?></a>
-                    <a href="map.php" class="btn btn-primary-sm">Abrir Mapa</a>
-                    <a href="logout.php" class="btn btn-danger-sm"><i class="ph-bold ph-sign-out"></i></a>
+                    <a href="settings" class="user-greeting" style="font-weight: 600; color: var(--text-main);"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($_SESSION["username"]); ?></a>
+                    <a href="map" class="btn btn-primary-sm">Abrir Mapa</a>
+                    <a href="logout" class="btn btn-danger-sm"><i class="ph-bold ph-sign-out"></i></a>
                 <?php
 else: ?>
-                    <a href="login.php" class="btn btn-outline">Entrar</a>
-                    <a href="register.php" class="btn btn-primary-sm">Criar Conta</a>
+                    <a href="login" class="btn btn-outline">Entrar</a>
+                    <a href="register" class="btn btn-primary-sm">Criar Conta</a>
                 <?php
 endif; ?>
             </div>
@@ -194,10 +195,10 @@ endif; ?>
         <p>Acede ao nosso mapa interativo, seleciona os teus locais favoritos e recebe o trajeto otimizado diretamente no teu GPS.</p>
         
         <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-            <a href="map.php" class="btn btn-primary" style="background-color: white; color: #0f172a;">Abrir Mapa Interativo</a>
+            <a href="map" class="btn btn-primary" style="background-color: white; color: #0f172a;">Abrir Mapa Interativo</a>
         <?php
 else: ?>
-            <a href="register.php" class="btn btn-primary">Criar a tua Conta</a>
+            <a href="register" class="btn btn-primary">Criar a tua Conta</a>
         <?php
 endif; ?>
     </div>

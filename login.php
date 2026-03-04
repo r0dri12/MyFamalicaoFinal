@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: map.php");
+if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+    header("location: map");
     exit;
 }
 
@@ -11,48 +11,53 @@ require_once "db_connect.php";
 $username = $password = "";
 $username_err = $password_err = $login_err = "";
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    if(empty(trim($_POST["username"]))){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty(trim($_POST["username"]))) {
         $username_err = "Introduz o teu nome de utilizador.";
-    } else{
+    }
+    else {
         $username = trim($_POST["username"]);
     }
-    
-    if(empty(trim($_POST["password"]))){
+
+    if (empty(trim($_POST["password"]))) {
         $password_err = "Introduz a tua palavra-passe.";
-    } else{
+    }
+    else {
         $password = trim($_POST["password"]);
     }
-    
-    if(empty($username_err) && empty($password_err)){
+
+    if (empty($username_err) && empty($password_err)) {
         $sql = "SELECT id, username, password FROM users WHERE username = :username";
-        
-        if($stmt = $conn->prepare($sql)){
+
+        if ($stmt = $conn->prepare($sql)) {
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
             $param_username = trim($_POST["username"]);
-            
-            if($stmt->execute()){
-                if($stmt->rowCount() == 1){
-                    if($row = $stmt->fetch()){
+
+            if ($stmt->execute()) {
+                if ($stmt->rowCount() == 1) {
+                    if ($row = $stmt->fetch()) {
                         $id = $row["id"];
                         $username = $row["username"];
                         $hashed_password = $row["password"];
-                        if(password_verify($password, $hashed_password)){
+                        if (password_verify($password, $hashed_password)) {
                             session_start();
-                            
+
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
-                            
-                            header("location: map.php");
-                        } else{
+                            $_SESSION["username"] = $username;
+
+                            header("location: map");
+                        }
+                        else {
                             $login_err = "Nome de utilizador ou palavra-passe incorretos.";
                         }
                     }
-                } else{
+                }
+                else {
                     $login_err = "Nome de utilizador ou palavra-passe incorretos.";
                 }
-            } else{
+            }
+            else {
                 echo "Ops! Algo deu errado. Tenta novamente mais tarde.";
             }
             unset($stmt);
@@ -66,6 +71,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="favicon.png">
     <title>Login - MyFamalicão</title>
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -85,16 +91,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <h2>Bem-vindo de volta!</h2>
             <p>Faz login para acederes ao Roteiro Interativo.</p>
 
-            <?php 
-            if(!empty($login_err)){
-                echo '<div class="alert alert-danger">' . $login_err . '</div>';
-            }        
-            ?>
+            <?php
+if (!empty($login_err)) {
+    echo '<div class="alert alert-danger">' . $login_err . '</div>';
+}
+?>
 
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                 <div class="form-group">
                     <label>Utilizador</label>
-                    <div class="input-wrapper <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
+                    <div class="input-wrapper <?php echo(!empty($username_err)) ? 'has-error' : ''; ?>">
                         <i class="ph ph-user"></i>
                         <input type="text" name="username" class="form-control" value="<?php echo $username; ?>" placeholder="O teu utilizador...">
                     </div>
@@ -102,7 +108,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 </div>    
                 <div class="form-group">
                     <label>Palavra-passe</label>
-                    <div class="input-wrapper <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+                    <div class="input-wrapper <?php echo(!empty($password_err)) ? 'has-error' : ''; ?>">
                         <i class="ph ph-lock-key"></i>
                         <input type="password" name="password" class="form-control" placeholder="A tua palavra-passe...">
                     </div>
@@ -111,7 +117,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary" style="width:100%">Entrar Seguro <i class="ph-bold ph-arrow-right"></i></button>
                 </div>
-                <p class="auth-link">Não tens conta? <a href="register.php">Regista-te agora</a>.</p>
+                <p class="auth-link">Não tens conta? <a href="register">Regista-te agora</a>.</p>
             </form>
         </div>
     </div>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: index.php");
     exit;
 }
@@ -11,6 +11,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
     <title>MyFamalicão - Roteiro Interativo</title>
 
     <!-- Google Fonts: Inter -->
@@ -82,7 +83,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     <!-- Painel Lateral Glassmorphism -->
     <aside id="sidebar" class="sidebar">
         <!-- Botão Voltar -->
-        <a href="index.php" class="btn-back">
+        <a href="index" class="btn-back">
             <i class="ph-bold ph-arrow-left"></i> Voltar ao Início
         </a>
         
@@ -105,7 +106,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     <span class="user-name"><?php echo htmlspecialchars($_SESSION["username"]); ?></span>
                 </div>
             </div>
-            <a href="logout.php" class="btn-logout" title="Terminar Sessão">
+            <a href="logout" class="btn-logout" title="Terminar Sessão">
                 <i class="ph-bold ph-sign-out"></i>
             </a>
         </div>
