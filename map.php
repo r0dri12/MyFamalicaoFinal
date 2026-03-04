@@ -167,7 +167,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     <li>Clica em qualquer <strong>lugar vazio no mapa</strong> (onde não existam marcadores azuis).</li>
                     <li>Vai aparecer um formulário. Preenche o <strong>Nome</strong> e a <strong>Descrição</strong> do teu local.</li>
                     <li>Clica em <strong>"Guardar"</strong>.</li>
-                    <li>Prabéns! O teu local (estrela vermelha) foi guardado na tua conta e podes adicioná-lo à tua rota.</li>
+                    <li>Parabéns! O teu local (estrela vermelha) foi guardado na tua conta e podes adicioná-lo à tua rota.</li>
                 </ol>
             </div>
 

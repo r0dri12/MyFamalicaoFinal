@@ -97,7 +97,7 @@ session_start();
 
             <div class="nav-auth">
                 <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                    <span class="user-greeting">Olá, <?php echo htmlspecialchars($_SESSION["username"]); ?>!</span>
+                    <a href="settings.php" class="user-greeting" style="font-weight: 600; color: var(--text-main);"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($_SESSION["username"]); ?></a>
                     <a href="map.php" class="btn btn-primary-sm">Abrir Mapa</a>
                     <a href="logout.php" class="btn btn-danger-sm"><i class="ph-bold ph-sign-out"></i></a>
                 <?php else: ?>
@@ -116,7 +116,7 @@ session_start();
 
         <div class="student-info">
             <h2>Rodrigo Afonso Loureiro de Frutuoso</h2>
-            <p>Processo nº 37866 - Agrupamento de Escolas Camilo Castelo Branco</p>
+            <p>Nº Processo: 37866 - Agrupamento de Escolas Camilo Castelo Branco</p>
         </div>
 
         <div class="about-grid">
