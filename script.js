@@ -80,8 +80,8 @@ const userIcon = L.divIcon({
     popupAnchor: [0, -32]
 });
 
-// Carregar marcadores customizados do utilizador
-fetch('api_custom_pois.php')
+// Carregar marcadores customizados do utilizador (evitando cache do browser)
+fetch('api_custom_pois.php?t=' + new Date().getTime())
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success' && data.pois) {
@@ -171,8 +171,7 @@ window.saveCustomPoi = function (lat, lng) {
         .then(data => {
             if (data.status === 'success') {
                 const newPoi = data.poi;
-                newPoi.type = "Meu Local";
-                newPoi.image = "https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"; // Imagem default de pin no mapa
+                // A API agora devolve o type e image corretos
                 newPoi.coords = [newPoi.lat, newPoi.lng];
 
                 pois.push(newPoi);
