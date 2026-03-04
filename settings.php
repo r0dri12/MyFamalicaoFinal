@@ -3,7 +3,7 @@ session_start();
 require_once "db_connect.php";
 
 // Redirect if not logged in
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: login.php");
     exit;
 }
@@ -29,10 +29,18 @@ $display_name = !empty($user['full_name']) ? $user['full_name'] : $user['usernam
 $join_date = date('F Y', strtotime($user['created_at']));
 
 // Badge logic
-if($poi_count >= 10) { $badge = "🏆 Guia Local"; }
-elseif($poi_count >= 5) { $badge = "🌟 Explorador"; }
-elseif($poi_count > 0) { $badge = "🎒 Turista"; }
-else { $badge = "🌱 Novato"; }
+if ($poi_count >= 10) {
+    $badge = "🏆 Guia Local";
+}
+elseif ($poi_count >= 5) {
+    $badge = "🌟 Explorador";
+}
+elseif ($poi_count > 0) {
+    $badge = "🎒 Turista";
+}
+else {
+    $badge = "🌱 Novato";
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -290,6 +298,7 @@ else { $badge = "🌱 Novato"; }
                 <a href="sobre.php">Sobre a PAP</a>
                 <a href="destaques.php">Destaques</a>
                 <a href="map.php">Mapa</a>
+                <a href="meus_locais.php">Meus Locais</a>
             </div>
             <div class="nav-auth" style="display: flex; gap: 12px; align-items: center;">
                 <a href="settings.php" class="user-greeting" style="font-weight: 600;"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($user['username']); ?></a>
@@ -311,11 +320,13 @@ else { $badge = "🌱 Novato"; }
                 <!-- Avatar clicável -->
                 <div class="avatar-wrapper" onclick="document.getElementById('avatar-input').click()">
                     <div class="avatar" id="avatarDisplay">
-                        <?php if(!empty($user['profile_picture']) && file_exists($user['profile_picture'])): ?>
+                        <?php if (!empty($user['profile_picture']) && file_exists($user['profile_picture'])): ?>
                             <img src="<?php echo htmlspecialchars($user['profile_picture']); ?>?v=<?php echo time(); ?>" alt="Avatar">
-                        <?php else: ?>
+                        <?php
+else: ?>
                             <?php echo $initials; ?>
-                        <?php endif; ?>
+                        <?php
+endif; ?>
                     </div>
                     <div class="avatar-overlay">
                         <i class="ph-bold ph-camera"></i>

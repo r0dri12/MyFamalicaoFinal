@@ -93,17 +93,23 @@ session_start();
                 <a href="index.php">Início</a>
                 <a href="sobre.php" class="active">Sobre a PAP</a>
                 <a href="destaques.php">Destaques</a>
+                <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+                <a href="meus_locais.php">Meus Locais</a>
+                <?php
+endif; ?>
             </div>
 
             <div class="nav-auth">
-                <?php if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+                <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
                     <a href="settings.php" class="user-greeting" style="font-weight: 600; color: var(--text-main);"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($_SESSION["username"]); ?></a>
                     <a href="map.php" class="btn btn-primary-sm">Abrir Mapa</a>
                     <a href="logout.php" class="btn btn-danger-sm"><i class="ph-bold ph-sign-out"></i></a>
-                <?php else: ?>
+                <?php
+else: ?>
                     <a href="login.php" class="btn btn-outline">Entrar</a>
                     <a href="register.php" class="btn btn-primary-sm">Criar Conta</a>
-                <?php endif; ?>
+                <?php
+endif; ?>
             </div>
         </div>
     </nav>
