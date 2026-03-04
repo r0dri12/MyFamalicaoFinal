@@ -80,6 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="auth_style.css">
+    <link rel="stylesheet" href="ui_notifications.css">
 </head>
 <body>
     <div class="auth-wrapper">
@@ -91,11 +92,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h2>Bem-vindo de volta!</h2>
             <p>Faz login para acederes ao Roteiro Interativo.</p>
 
-            <?php
-if (!empty($login_err)) {
-    echo '<div class="alert alert-danger">' . $login_err . '</div>';
-}
-?>
 
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                 <div class="form-group">
@@ -121,5 +117,14 @@ if (!empty($login_err)) {
             </form>
         </div>
     </div>
+    <script src="ui_notifications.js"></script>
+    <?php if (!empty($login_err)): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            myFama.alert("Erro de Login", "<?php echo $login_err; ?>", "error");
+        });
+    </script>
+    <?php
+endif; ?>
 </body>
 </html>

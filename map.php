@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    header("location: index.php");
+    header("location: index");
     exit;
 }
 ?>
@@ -26,6 +26,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ui_notifications.css">
     <style>
         .user-profile {
             display: flex;
@@ -130,9 +131,9 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     Abrir no Google Maps
                 </button>
                 <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="alert('Funcionalidade de Áudio-Guia em desenvolvimento!')">
+                    <button id="btn-audio-main" class="btn btn-secondary" onclick="playFullRouteAudio()">
                         <i class="ph-fill ph-speaker-high"></i>
-                        Áudio
+                        Áudio-Guia
                     </button>
                     <button id="btn-clear" class="btn btn-danger" disabled>
                         <i class="ph-bold ph-trash"></i>
@@ -190,6 +191,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="script.js"></script>
+    <script src="ui_notifications.js"></script>
+    <script src="script.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

@@ -54,6 +54,7 @@ else {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="main_style.css">
+    <link rel="stylesheet" href="ui_notifications.css">
     <style>
         .settings-container {
             max-width: 900px;
@@ -455,5 +456,6 @@ endif; ?>
             });
         }
     </script>
+    <script src="ui_notifications.js"></script>
 </body>
 </html>

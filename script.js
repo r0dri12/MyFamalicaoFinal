@@ -103,9 +103,14 @@ function addMarkerToMap(poi, iconType) {
             <img src="${poi.image}" alt="${poi.name}">
             <h3>${poi.name}</h3>
             <p>${poi.description}</p>
-            <button class="add-poi-btn" onclick="addToRoute('${poi.id}')">
-                <i class="ph-bold ph-plus"></i> Adicionar à Rota
-            </button>
+            <div style="display:flex; gap:8px; margin-top:12px;">
+                <button class="add-poi-btn" onclick="addToRoute('${poi.id}')" style="flex:1;">
+                    <i class="ph-bold ph-plus"></i> Adicionar
+                </button>
+                <button class="btn-audio-mini" onclick="speakPOI('${poi.id}')" title="Ouvir descrição" style="width:40px; height:40px; background:#eff6ff; color:var(--primary); border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                    <i class="ph-fill ph-speaker-high"></i>
+                </button>
+            </div>
         </div>
     `;
 
@@ -149,7 +154,7 @@ window.saveCustomPoi = function (lat, lng) {
     const descInput = document.getElementById('new-poi-desc').value;
 
     if (!nameInput.trim()) {
-        alert("Por favor, dá um nome ao teu local.");
+        myFama.alert("Campo Obrigatório", "Por favor, dá um nome ao teu local.", "warning");
         return;
     }
 
@@ -177,14 +182,14 @@ window.saveCustomPoi = function (lat, lng) {
                 pois.push(newPoi);
                 map.removeLayer(tempMarker); // Remove o formulário temporário
                 addMarkerToMap(newPoi, userIcon); // Adiciona o marcador vermelho real
-                alert("Local guardado com sucesso!");
+                myFama.toast("Local guardado com sucesso!", "success");
             } else {
-                alert("Erro: " + data.message);
+                myFama.alert("Erro ao Guardar", data.message, "error");
             }
         })
         .catch(error => {
             console.error('Erro:', error);
-            alert("Ocorreu um erro ao guardar o local. Estás autenticado?");
+            myFama.alert("Erro de Autenticação", "Ocorreu um erro ao guardar o local. Estás autenticado?", "error");
         });
 };
 
@@ -206,7 +211,7 @@ window.addToRoute = function (id) {
 
     // Verificar se já existe na rota
     if (currentRoute.find(p => String(p.id) === String(id))) {
-        alert("Este local já está na tua rota!");
+        myFama.toast("Este local já está na tua rota!", "info");
         return;
     }
 
@@ -222,10 +227,17 @@ window.removeFromRoute = function (index) {
 };
 
 // Limpar toda a rota
-btnClear.addEventListener('click', () => {
-    if (confirm('Queres mesmo limpar a tua rota toda?')) {
+btnClear.addEventListener('click', async () => {
+    const confirmed = await myFama.confirm(
+        "Limpar Roteiro",
+        "Queres mesmo limpar a tua rota toda?",
+        { isDanger: true, confirmText: "Limpar Tudo" }
+    );
+
+    if (confirmed) {
         currentRoute = [];
         updateRouteUI();
+        myFama.toast("Roteiro limpo.", "info");
     }
 });
 
@@ -269,9 +281,14 @@ function updateRouteUI() {
                 <h3>${index + 1}. ${poi.name}</h3>
                 <p>${poi.type}</p>
             </div>
-            <button class="remove-btn" onclick="removeFromRoute(${index})" title="Remover da rota">
-                <i class="ph-bold ph-x"></i>
-            </button>
+            <div class="route-item-actions" style="display:flex; gap:4px;">
+                <button class="audio-btn-small" onclick="speakPOI('${poi.id}')" title="Ouvir local" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:18px; padding:4px;">
+                    <i class="ph-fill ph-speaker-high"></i>
+                </button>
+                <button class="remove-btn" onclick="removeFromRoute(${index})" title="Remover da rota">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
         `;
         routeList.appendChild(li);
     });
@@ -349,6 +366,93 @@ map.on('locationfound', function (e) {
 });
 
 map.on('locationerror', function (e) {
-    alert("Erro de Localização: " + e.message);
+    myFama.toast("Erro de Localização: " + e.message, "error");
     console.error("Location Error:", e);
 });
+
+// =========================================
+// AUDIO GUIDE LOGIC (Web Speech API)
+// =========================================
+
+let speechUtterance = null;
+let isPlayingRoute = false;
+
+window.speakPOI = function (id) {
+    const poi = pois.find(p => String(p.id) === String(id));
+    if (!poi) return;
+
+    // Se já estiver a falar, para
+    window.stopAudio();
+
+    const textToSpeak = `${poi.name}. ${poi.description}`;
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = 'pt-PT';
+    utterance.rate = 0.9; // Um pouco mais lento para ser percetível
+
+    window.speechSynthesis.speak(utterance);
+    speechUtterance = utterance;
+};
+
+window.playFullRouteAudio = function () {
+    if (currentRoute.length === 0) {
+        myFama.alert("Roteiro Vazio", "Adiciona locais à tua rota primeiro!", "info");
+        return;
+    }
+
+    if (isPlayingRoute) {
+        window.stopAudio();
+        return;
+    }
+
+    isPlayingRoute = true;
+    updateAudioButtonUI(true);
+
+    let currentIndex = 0;
+
+    function speakNext() {
+        if (currentIndex >= currentRoute.length || !isPlayingRoute) {
+            isPlayingRoute = false;
+            updateAudioButtonUI(false);
+            return;
+        }
+
+        const poi = currentRoute[currentIndex];
+        const textToSpeak = `Ponto ${currentIndex + 1}: ${poi.name}. ${poi.description}`;
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        utterance.lang = 'pt-PT';
+        utterance.rate = 0.9;
+
+        utterance.onend = () => {
+            currentIndex++;
+            setTimeout(speakNext, 1000); // Pausa de 1 segundo entre locais
+        };
+
+        window.speechSynthesis.speak(utterance);
+        speechUtterance = utterance;
+    }
+
+    speakNext();
+};
+
+window.stopAudio = function () {
+    window.speechSynthesis.cancel();
+    isPlayingRoute = false;
+    updateAudioButtonUI(false);
+};
+
+function updateAudioButtonUI(active) {
+    const btnAudio = document.getElementById('btn-audio-main');
+    if (!btnAudio) return;
+
+    if (active) {
+        btnAudio.innerHTML = '<i class="ph-fill ph-stop-circle"></i> Parar Áudio';
+        btnAudio.style.backgroundColor = 'var(--danger)';
+        btnAudio.style.color = 'white';
+        btnAudio.classList.add('pulse-animation');
+    } else {
+        btnAudio.innerHTML = '<i class="ph-fill ph-speaker-high"></i> Áudio-Guia';
+        btnAudio.style.backgroundColor = '#f1f5f9';
+        btnAudio.style.color = 'var(--text-main)';
+        btnAudio.classList.remove('pulse-animation');
+    }
+}

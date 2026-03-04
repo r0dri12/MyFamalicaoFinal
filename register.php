@@ -100,6 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="auth_style.css">
+    <link rel="stylesheet" href="ui_notifications.css">
 </head>
 <body>
     <div class="auth-wrapper">
@@ -152,5 +153,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         </div>
     </div>
+    <script src="ui_notifications.js"></script>
+    <?php
+$any_err = "";
+if (!empty($username_err))
+    $any_err = $username_err;
+elseif (!empty($password_err))
+    $any_err = $password_err;
+elseif (!empty($confirm_password_err))
+    $any_err = $confirm_password_err;
+elseif (!empty($full_name_err))
+    $any_err = $full_name_err;
+
+if (!empty($any_err)): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            myFama.alert("Erro no Registo", "<?php echo $any_err; ?>", "error");
+        });
+    </script>
+    <?php
+endif; ?>
 </body>
 </html>

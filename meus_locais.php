@@ -41,6 +41,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="main_style.css">
+    <link rel="stylesheet" href="ui_notifications.css">
     <style>
         .page-top {
             background: white;
@@ -543,7 +544,10 @@ endif; ?>
             const desc = document.getElementById('editDesc').value;
             const fileInput = document.getElementById('editImageInput');
 
-            if(!name.trim()) { alert("O nome é obrigatório!"); return; }
+        if(!name.trim()) { 
+            myFama.toast("O nome é obrigatório!", "error"); 
+            return; 
+        }
 
             const formData = new FormData();
             formData.append('action', 'edit');
@@ -563,21 +567,27 @@ endif; ?>
             .then(res => res.json())
             .then(data => {
                 if(data.status === 'success') {
-                    window.location.reload(); // Quickest way to reflect changes visually in this context
+                    myFama.toast("Local atualizado com sucesso!", "success");
+                    setTimeout(() => window.location.reload(), 1000);
                 } else {
-                    alert('Erro: ' + data.message);
+                    myFama.alert("Erro ao Editar", data.message, "error");
                 }
             })
             .catch(err => {
                 console.error(err);
-                alert("Ocorreu um erro na comunicação com o servidor.");
+                myFama.toast("Erro na comunicação com o servidor.", "error");
             });
         }
 
         // Delete POI
-        function deletePoi(id) {
-            if(confirm("Tens a certeza que queres eliminar este local? Esta ação não pode ser desfeita e ele será removido dos teus roteiros guardados.")) {
-                
+        async function deletePoi(id) {
+            const confirmed = await myFama.confirm(
+                "Eliminar Local", 
+                "Tens a certeza que queres eliminar este local? Esta ação não pode ser desfeita.",
+                { isDanger: true, confirmText: "Sim, Eliminar" }
+            );
+
+            if(confirmed) {
                 const formData = new FormData();
                 formData.append('action', 'delete');
                 formData.append('id', id);
@@ -589,21 +599,22 @@ endif; ?>
                 .then(res => res.json())
                 .then(data => {
                     if(data.status === 'success') {
+                        myFama.toast("Local removido com sucesso!", "info");
                         document.getElementById('poi-card-' + id).remove();
-                        // If all removed, we could refresh to show empty state
                         if(document.querySelectorAll('.poi-card').length === 0) {
-                            window.location.reload();
+                            setTimeout(() => window.location.reload(), 1000);
                         }
                     } else {
-                        alert('Erro ao eliminar: ' + data.message);
+                        myFama.alert("Erro ao Eliminar", data.message, "error");
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert("Ocorreu um erro na comunicação com o servidor.");
+                    myFama.toast("Erro na comunicação com o servidor.", "error");
                 });
             }
         }
     </script>
+    <script src="ui_notifications.js"></script>
 </body>
 </html>

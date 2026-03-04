@@ -18,6 +18,7 @@ session_start();
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <link rel="stylesheet" href="main_style.css">
+    <link rel="stylesheet" href="ui_notifications.css">
 </head>
 <body>
 
@@ -106,5 +107,6 @@ endif; ?>
         <p>&copy; <?php echo date("Y"); ?> MyFamalicão. PAP de Rodrigo de Frutuoso.</p>
     </footer>
 
+    <script src="ui_notifications.js"></script>
 </body>
 </html>
