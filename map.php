@@ -146,6 +146,11 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         <i class="ph-bold ph-question"></i> Ajuda
     </button>
 
+    <!-- Botão de Localização Flutuante -->
+    <button class="btn-location" onclick="locateUser()" title="A minha localização">
+        <i class="ph-bold ph-crosshair"></i>
+    </button>
+
     <!-- Modal de Ajuda -->
     <div id="helpModal" class="modal-overlay">
         <div class="modal-content">

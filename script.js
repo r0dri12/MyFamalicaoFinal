@@ -309,3 +309,47 @@ btnExportGoogle.addEventListener('click', () => {
     // Abrir o link num novo separador (isto abria a app logo no telemovel)
     window.open(url, '_blank');
 });
+
+// Localização do Utilizador
+let userLocationMarker = null;
+let userLocationCircle = null;
+
+window.locateUser = function () {
+    map.locate({ setView: true, maxZoom: 16 });
+};
+
+map.on('locationfound', function (e) {
+    const radius = e.accuracy / 2;
+
+    if (!userLocationMarker) {
+        // Criar ícone de ponto azul pulsante
+        const blueDotIcon = L.divIcon({
+            className: 'user-location-marker',
+            html: `<div style="background-color: #3b82f6; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);"></div>`,
+            iconSize: [22, 22],
+            iconAnchor: [11, 11],
+            popupAnchor: [0, -11]
+        });
+
+        userLocationMarker = L.marker(e.latlng, { icon: blueDotIcon }).addTo(map);
+        userLocationMarker.bindPopup("Estás aqui!").openPopup();
+
+        userLocationCircle = L.circle(e.latlng, {
+            radius: radius,
+            color: '#3b82f6',
+            fillColor: '#3b82f6',
+            fillOpacity: 0.15,
+            weight: 1
+        }).addTo(map);
+    } else {
+        userLocationMarker.setLatLng(e.latlng);
+        userLocationCircle.setLatLng(e.latlng);
+        userLocationCircle.setRadius(radius);
+        userLocationMarker.openPopup();
+    }
+});
+
+map.on('locationerror', function (e) {
+    alert("Erro de Localização: " + e.message);
+    console.error("Location Error:", e);
+});

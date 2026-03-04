@@ -213,6 +213,36 @@ body {
     font-size: 18px;
 }
 
+.btn-location {
+    position: fixed;
+    top: 80px;
+    right: 24px;
+    background: white;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.2s;
+}
+
+.btn-location:hover {
+    background: var(--surface);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.btn-location i {
+    color: var(--primary);
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;
