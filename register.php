@@ -1,11 +1,19 @@
 <?php
 require_once "db_connect.php";
 
-$username = $password = $confirm_password = "";
-$username_err = $password_err = $confirm_password_err = "";
+$full_name = $username = $password = $confirm_password = "";
+$full_name_err = $username_err = $password_err = $confirm_password_err = "";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     
+    // Full Name Validation
+    if(empty(trim($_POST["full_name"]))){
+        $full_name_err = "Introduz o teu nome completo.";
+    } else {
+        $full_name = trim($_POST["full_name"]);
+    }
+
+    // Username Validation
     if(empty(trim($_POST["username"]))){
         $username_err = "Introduz um nome de utilizador.";
     } elseif(!preg_match('/^[a-zA-Z0-9_]+$/', trim($_POST["username"]))){
@@ -24,13 +32,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     $username = trim($_POST["username"]);
                 }
             } else{
-                echo "Ops! Algo deu errado. Tenta novamente mais tarde.";
+                echo "Ops! Algo deu errado.";
             }
-
             unset($stmt);
         }
     }
     
+    // Password Validation
     if(empty(trim($_POST["password"]))){
         $password_err = "Introduz uma palavra-passe.";     
     } elseif(strlen(trim($_POST["password"])) < 6){
@@ -48,20 +56,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
-        $sql = "INSERT INTO users (username, password) VALUES (:username, :password)";
+    if(empty($full_name_err) && empty($username_err) && empty($password_err) && empty($confirm_password_err)){
+        $sql = "INSERT INTO users (full_name, username, password) VALUES (:full_name, :username, :password)";
          
         if($stmt = $conn->prepare($sql)){
+            $stmt->bindParam(":full_name", $param_full_name, PDO::PARAM_STR);
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
             $stmt->bindParam(":password", $param_password, PDO::PARAM_STR);
             
+            $param_full_name = $full_name;
             $param_username = $username;
-            $param_password = password_hash($password, PASSWORD_DEFAULT); // Cria hash da password
+            $param_password = password_hash($password, PASSWORD_DEFAULT);
             
             if($stmt->execute()){
-                header("location: index.php");
+                header("location: login.php");
             } else{
-                echo "Ops! Algo deu errado. Tenta novamente mais tarde.";
+                echo "Ops! Algo deu errado. Tenta mais tarde.";
             }
             unset($stmt);
         }
@@ -93,7 +103,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                 <div class="form-group">
-                    <label>Utilizador</label>
+                    <label>Nome Completo</label>
+                    <div class="input-wrapper <?php echo (!empty($full_name_err)) ? 'has-error' : ''; ?>">
+                        <i class="ph ph-identification-badge"></i>
+                        <input type="text" name="full_name" class="form-control" value="<?php echo $full_name; ?>" placeholder="O teu nome completo...">
+                    </div>
+                    <span class="invalid-feedback"><?php echo $full_name_err; ?></span>
+                </div>
+                <div class="form-group">
+                    <label>Nome de Utilizador</label>
                     <div class="input-wrapper <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
                         <i class="ph ph-user"></i>
                         <input type="text" name="username" class="form-control" value="<?php echo $username; ?>" placeholder="Escolhe um utilizador...">
@@ -104,7 +122,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <label>Palavra-passe</label>
                     <div class="input-wrapper <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
                         <i class="ph ph-lock-key"></i>
-                        <input type="password" name="password" class="form-control" value="<?php echo $password; ?>" placeholder="Mínimo de 6 caracteres...">
+                        <input type="password" name="password" class="form-control" placeholder="Mínimo de 6 caracteres...">
                     </div>
                     <span class="invalid-feedback"><?php echo $password_err; ?></span>
                 </div>
@@ -112,15 +130,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <label>Confirmar Palavra-passe</label>
                     <div class="input-wrapper <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
                         <i class="ph ph-check-circle"></i>
-                        <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>" placeholder="Repete a palavra-passe...">
+                        <input type="password" name="confirm_password" class="form-control" placeholder="Repete a palavra-passe...">
                     </div>
                     <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary" style="width:100%">Registar <i class="ph-bold ph-arrow-right"></i></button>
+                    <button type="submit" class="btn btn-primary" style="width:100%">Criar Conta <i class="ph-bold ph-arrow-right"></i></button>
                     <button type="reset" class="btn btn-secondary" style="width:100%; margin-top: 10px;">Limpar</button>
                 </div>
-                <p class="auth-link">Já tens uma conta? <a href="index.php">Faz Login</a>.</p>
+                <p class="auth-link">Já tens uma conta? <a href="login.php">Faz Login</a>.</p>
             </form>
         </div>
     </div>
