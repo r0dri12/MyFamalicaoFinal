@@ -95,7 +95,9 @@ session_start();
                 <a href="index">Início</a>
                 <a href="sobre" class="active">Sobre a PAP</a>
                 <a href="destaques">Destaques</a>
+                <a href="comunidade">Comunidade</a>
                 <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+                <a href="map">Mapa</a>
                 <a href="meus_locais">Meus Locais</a>
                 <?php
 endif; ?>

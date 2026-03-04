@@ -59,26 +59,43 @@ body {
 }
 
 /* Botão Voltar no mapa */
-.btn-back {
-    display: inline-flex;
-    align-items: center;
+.sidebar-nav-top {
+    display: flex;
     gap: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-muted);
-    background: #f1f5f9;
-    border-radius: 10px;
-    padding: 8px 14px;
-    margin-bottom: 18px;
-    text-decoration: none;
-    transition: all 0.2s;
-    width: fit-content;
+    margin-bottom: 20px;
 }
 
-.btn-back:hover {
+.btn-side-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    border-radius: 12px;
+    padding: 8px 12px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    flex: 1;
+    justify-content: center;
+}
+
+.btn-side-nav i {
+    font-size: 16px;
+}
+
+.btn-side-nav:hover {
     background: var(--primary);
     color: white;
-    transform: translateX(-3px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    border-color: var(--primary);
+}
+
+.btn-side-nav:active {
+    transform: translateY(0);
 }
 
 .sidebar-header {
@@ -364,9 +381,11 @@ body {
     0% {
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
     }
+
     70% {
         box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
     }

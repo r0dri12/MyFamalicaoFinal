@@ -362,6 +362,8 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <a href="index">Início</a>
                 <a href="sobre">Sobre a PAP</a>
                 <a href="destaques">Destaques</a>
+                <a href="comunidade">Comunidade</a>
+                <a href="map">Mapa</a>
                 <a href="meus_locais" class="active">Meus Locais</a>
             </div>
             <div class="nav-auth" style="display: flex; gap: 12px; align-items: center;">

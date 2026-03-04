@@ -138,6 +138,12 @@ map.on('click', function (e) {
             <h3 style="margin-bottom:12px; color:var(--primary);">Criar Meu Local</h3>
             <input type="text" id="new-poi-name" placeholder="Nome do Local (Ex: Restaurante X)" style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #ddd; border-radius:6px; font-family:Inter;">
             <textarea id="new-poi-desc" placeholder="Pequena descrição ou notas..." style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #ddd; border-radius:6px; font-family:Inter; resize:vertical; min-height:60px;"></textarea>
+            
+            <label style="display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:13px; cursor:pointer;">
+                <input type="checkbox" id="new-poi-public" style="width:16px; height:16px;">
+                Tornar público para a comunidade
+            </label>
+
             <div style="display:flex; gap:8px;">
                 <button onclick="saveCustomPoi(${lat}, ${lng})" style="flex:1; background:var(--primary); color:white; border:none; padding:8px; border-radius:6px; cursor:pointer; font-weight:600;">Guardar</button>
                 <button onclick="map.closePopup()" style="background:#f1f5f9; color:#333; border:none; padding:8px; border-radius:6px; cursor:pointer;">Cancelar</button>
@@ -152,6 +158,7 @@ map.on('click', function (e) {
 window.saveCustomPoi = function (lat, lng) {
     const nameInput = document.getElementById('new-poi-name').value;
     const descInput = document.getElementById('new-poi-desc').value;
+    const isPublic = document.getElementById('new-poi-public').checked ? 1 : 0;
 
     if (!nameInput.trim()) {
         myFama.alert("Campo Obrigatório", "Por favor, dá um nome ao teu local.", "warning");
@@ -162,7 +169,8 @@ window.saveCustomPoi = function (lat, lng) {
         name: nameInput,
         description: descInput || "Local adicionado por mim",
         lat: lat,
-        lng: lng
+        lng: lng,
+        is_public: isPublic
     };
 
     fetch('api_custom_pois.php', {

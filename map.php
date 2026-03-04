@@ -84,9 +84,11 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     <!-- Painel Lateral Glassmorphism -->
     <aside id="sidebar" class="sidebar">
         <!-- Botão Voltar -->
-        <a href="index" class="btn-back">
-            <i class="ph-bold ph-arrow-left"></i> Voltar ao Início
-        </a>
+        <div class="sidebar-nav-top">
+            <a href="index" class="btn-side-nav"><i class="ph-bold ph-house"></i> Início</a>
+            <a href="comunidade" class="btn-side-nav"><i class="ph-bold ph-users"></i> Comunidade</a>
+            <a href="meus_locais" class="btn-side-nav"><i class="ph-bold ph-heart-straight"></i> Meus Locais</a>
+        </div>
         
         <header class="sidebar-header">
             <div class="logo">
