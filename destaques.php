@@ -152,7 +152,7 @@ endif; ?>
     <!-- Grelha de Destaques -->
     <div class="gallery-grid">
         <div class="gallery-item">
-            <img class="gallery-img" src="https://images.unsplash.com/photo-1587844053648-2895ea305260?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Parque da Devesa">
+            <img class="gallery-img" src="https://www.parquedadevesa.com/op/image/?co=1113&h=ccd6c" alt="Parque da Devesa">
             <div class="gallery-content">
                 <span class="gallery-tag">Natureza</span>
                 <h3>Parque da Devesa</h3>
@@ -161,7 +161,7 @@ endif; ?>
         </div>
 
         <div class="gallery-item">
-            <img class="gallery-img" src="https://images.unsplash.com/photo-1541123437800-1bb1317bc951?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Museu Bernardino Machado">
+            <img class="gallery-img" src="https://www.famalicao.pt/op/image/?co=183709&h=8dc50" alt="Museu Bernardino Machado">
             <div class="gallery-content">
                 <span class="gallery-tag">Cultura</span>
                 <h3>Museu Bernardino Machado</h3>
@@ -170,7 +170,7 @@ endif; ?>
         </div>
 
         <div class="gallery-item">
-            <img class="gallery-img" src="https://images.unsplash.com/photo-1548625361-ec8571ea7ab0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Igreja Matriz Nova">
+            <img class="gallery-img" src="https://images.mnstatic.com/83/ff/83ff5471cac7e0b42b062e0a16024e7c.jpg" alt="Igreja Matriz Nova">
             <div class="gallery-content">
                 <span class="gallery-tag">Monumento</span>
                 <h3>Igreja Matriz Nova</h3>
@@ -179,7 +179,7 @@ endif; ?>
         </div>
         
         <div class="gallery-item">
-            <img class="gallery-img" src="https://images.unsplash.com/photo-1574958269340-fa927503f3dd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Fundação Cupertino de Miranda">
+            <img class="gallery-img" src="https://rpac.pt/_rpac/wp-content/uploads/2023/09/Fundacao-Cupertino-Miranda-Exterior-2-FCM_2_ext.jpg" alt="Fundação Cupertino de Miranda">
             <div class="gallery-content">
                 <span class="gallery-tag">Arte Surrealista</span>
                 <h3>Fundação Cupertino de Miranda</h3>
