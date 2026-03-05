@@ -365,8 +365,10 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <a href="index">Início</a>
                 <a href="sobre">Sobre a PAP</a>
                 <a href="destaques">Destaques</a>
+                <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
                 <a href="comunidade">Comunidade</a>
                 <a href="meus_locais" class="active">Meus Locais</a>
+                <?php endif; ?>
             </div>
 
             <div class="nav-actions">

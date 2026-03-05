@@ -184,8 +184,10 @@ if (!$user || $user['is_admin'] != 1) {
                 <a href="index">Início</a>
                 <a href="sobre">Sobre a PAP</a>
                 <a href="destaques">Destaques</a>
+                <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
                 <a href="comunidade">Comunidade</a>
                 <a href="meus_locais">Meus Locais</a>
+                <?php endif; ?>
             </div>
 
             <div class="nav-actions">

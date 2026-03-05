@@ -36,14 +36,10 @@ session_start();
                 <a href="index" class="active">Início</a>
                 <a href="sobre">Sobre a PAP</a>
                 <a href="destaques">Destaques</a>
-                <a href="comunidade">Comunidade</a>
                 <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+                <a href="comunidade">Comunidade</a>
                 <a href="meus_locais">Meus Locais</a>
-                <?php
-else: ?>
-                <a href="login" class="nav-btn">Entrar</a>
-                <?php
-endif; ?>
+                <?php endif; ?>
             </div>
 
             <div class="nav-actions">

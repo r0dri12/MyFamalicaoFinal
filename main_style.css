@@ -9,6 +9,14 @@
     --danger: #ef4444;
 }
 
+[data-theme="dark"] {
+    --background: #0f172a;
+    --surface: #1e293b;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -573,4 +581,11 @@ footer {
 
 .navbar {
     z-index: 1000 !important;
+}
+
+/* Efeito de brilho na linha da rota */
+.route-polyline-glow {
+    filter: drop-shadow(0 0 5px var(--primary));
+    stroke-linecap: round;
+    transition: all 0.5s ease;
 }

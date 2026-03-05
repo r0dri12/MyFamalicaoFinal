@@ -26,6 +26,44 @@ L.control.zoom({
 
 // Array para guardar os pontos da rota selecionados
 let currentRoute = [];
+let pendingPoiId = null;
+let isFindingStart = false;
+
+// Linha da rota no mapa (Polyline) - Agora gerida pelo Routing Machine
+let routingControl = L.Routing.control({
+    waypoints: [],
+    routeWhileDragging: false,
+    addWaypoints: false,
+    draggableWaypoints: false,
+    autoRoute: true, // Garante que a rota é calculada automaticamente
+    fitSelectedRoutes: false,
+    showAlternatives: false,
+    lineOptions: {
+        styles: [{ color: '#3b82f6', opacity: 0.6, weight: 6, dashArray: '10, 10' }]
+    },
+    createMarker: function () { return null; }, // Não queremos os marcadores padrão do routing
+    show: false // Esconder o painel de instruções padrão
+}).addTo(map);
+
+// Ouvir quando a rota é encontrada para calcular distância e tempo
+routingControl.on('routesfound', function (e) {
+    console.log("Rota encontrada:", e.routes);
+    const routes = e.routes;
+    const summary = routes[0].summary;
+
+    const distanceKm = (summary.totalDistance / 1000).toFixed(1);
+    const timeMin = Math.round(summary.totalTime / 60);
+
+    const summaryDiv = document.getElementById('route-summary');
+    const distSpan = document.getElementById('route-distance');
+    const timeSpan = document.getElementById('route-time');
+
+    if (summaryDiv && distSpan && timeSpan) {
+        summaryDiv.style.display = 'block';
+        distSpan.innerHTML = `<i class="ph-bold ph-map-trifold"></i> ${distanceKm} km`;
+        timeSpan.innerHTML = `<i class="ph-bold ph-clock"></i> ${timeMin} min`;
+    }
+});
 
 // Lógica de Bottom Sheet deslizante para Mobile
 document.addEventListener('DOMContentLoaded', function () {
@@ -313,7 +351,12 @@ const btnClear = document.getElementById('btn-clear');
 
 // Função para adicionar um ponto à rota
 window.addToRoute = function (id) {
-    // Garantir que a comparação é feita com strings, pois os IDs custom são "custom_1" e os originais "1"
+    if (currentRoute.length === 0) {
+        window.openStartModal(id);
+        return;
+    }
+
+    // Garantir que a comparação é feita com strings
     const poi = pois.find(p => String(p.id) === String(id));
 
     if (!poi) {
@@ -418,9 +461,10 @@ function updateRouteUI() {
         if (poi.type === "Cultura") iconClass = "ph-books";
         if (poi.type === "Arte") iconClass = "ph-palette";
         if (poi.type === "Monumento") iconClass = "ph-bank";
+        if (poi.type === "Partida") iconClass = "ph-navigation-arrow";
 
         li.innerHTML = `
-            <div class="route-item-icon">
+            <div class="route-item-icon" style="${poi.type === 'Partida' ? 'background:var(--primary); color:white;' : ''}">
                 <i class="ph-fill ${iconClass}"></i>
             </div>
             <div class="route-item-info">
@@ -438,6 +482,17 @@ function updateRouteUI() {
         `;
         routeList.appendChild(li);
     });
+
+    // Atualizar o motor de rotas (Leaflet Routing Machine)
+    if (total >= 2) {
+        const waypoints = currentRoute.map(poi => L.latLng(poi.coords[0], poi.coords[1]));
+        routingControl.setWaypoints(waypoints);
+        routingControl.route(); // Forçar cálculo do novo percurso
+    } else {
+        routingControl.setWaypoints([]);
+        const summaryDiv = document.getElementById('route-summary');
+        if (summaryDiv) summaryDiv.style.display = 'none';
+    }
 }
 
 // Exportar Rota para Google Maps (Usando Google Maps Directions URL)
@@ -477,11 +532,43 @@ let userLocationMarker = null;
 let userLocationCircle = null;
 
 window.locateUser = function () {
-    map.locate({ setView: true, maxZoom: 16 });
+    if (!window.isSecureContext && window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+        myFama.alert("Ligação Insegura", "O iPhone (Safari) bloqueia a localização em sites que não usam 'https://'. Se estás a testar localmente, tenta aceder via HTTPS ou usa o PC.", "warning");
+        return;
+    }
+
+    map.locate({
+        setView: true,
+        maxZoom: 16,
+        enableHighAccuracy: true,
+        timeout: 10000
+    });
 };
 
 map.on('locationfound', function (e) {
     const radius = e.accuracy / 2;
+
+    if (isFindingStart) {
+        const gpsPoi = {
+            id: 'gps_start_' + Date.now(),
+            name: 'Minha Localização',
+            coords: [e.latlng.lat, e.latlng.lng],
+            type: 'Partida',
+            image: 'https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20'
+        };
+
+        currentRoute.push(gpsPoi);
+        isFindingStart = false;
+
+        if (pendingPoiId) {
+            const poi = pois.find(p => String(p.id) === String(pendingPoiId));
+            if (poi) currentRoute.push(poi);
+            pendingPoiId = null;
+        }
+
+        updateRouteUI();
+        myFama.toast("Partida definida pela tua localização!", "success");
+    }
 
     if (!userLocationMarker) {
         // Criar ícone de ponto azul pulsante
@@ -669,6 +756,46 @@ function updateAudioButtonUI(active) {
 }
 
 // =========================================
+// ROUTE START LOGIC
+// =========================================
+
+window.openStartModal = function (poiId = null) {
+    pendingPoiId = poiId;
+    const modal = document.getElementById('startRouteModal');
+    const selectedBtn = document.getElementById('btn-start-selected');
+
+    if (poiId) {
+        selectedBtn.style.display = 'block';
+        const poi = pois.find(p => String(p.id) === String(poiId));
+        if (poi) selectedBtn.innerHTML = `<i class="ph-bold ph-map-pin"></i> Começar em "${poi.name}"`;
+    } else {
+        selectedBtn.style.display = 'none';
+    }
+
+    modal.style.display = 'flex';
+};
+
+window.confirmStartRoute = function (method) {
+    document.getElementById('startRouteModal').style.display = 'none';
+
+    if (method === 'gps') {
+        isFindingStart = true;
+        myFama.toast("A obter a tua localização...", "info");
+        window.locateUser();
+    } else if (method === 'selected') {
+        if (pendingPoiId) {
+            const poi = pois.find(p => String(p.id) === String(pendingPoiId));
+            if (poi) {
+                currentRoute.push(poi);
+                pendingPoiId = null;
+                updateRouteUI();
+                myFama.toast("Ponto de partida selecionado!", "success");
+            }
+        }
+    }
+};
+
+// =========================================
 // ROUTE HISTORY LOGIC
 // =========================================
 
@@ -678,11 +805,12 @@ window.openSaveRouteModal = function () {
 };
 
 window.confirmSaveRoute = function () {
+    const routeName = document.getElementById('route-name-input').value.trim() || 'Meu Roteiro';
     const description = document.getElementById('route-desc-input').value.trim();
     const isPublic = document.getElementById('route-public-checkbox').checked ? 1 : 0;
 
     const payload = {
-        name: name,
+        name: routeName,
         description: description,
         is_public: isPublic,
         items: currentRoute.map(p => String(p.id))

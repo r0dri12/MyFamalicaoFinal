@@ -26,6 +26,9 @@ $userLang = $_SESSION["language"] ?? 'pt';
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     
+    <!-- Leaflet Routing Machine CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    
     <!-- Phosphor Icons para ícones modernos -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -81,16 +84,17 @@ $userLang = $_SESSION["language"] ?? 'pt';
 
         /* Language Selector Styling */
         .lang-selector {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             padding: 10px;
             background: rgba(255, 255, 255, 0.5);
             border-radius: 12px;
             border: 1px solid rgba(0,0,0,0.05);
         }
         .lang-btn {
-            flex: 1;
+            width: 100%;
             padding: 8px 4px;
             border: 1px solid #e2e8f0;
             background: white;
@@ -194,25 +198,6 @@ $userLang = $_SESSION["language"] ?? 'pt';
 
         <!-- Tradução Automática (Invisível mas 'presente' para o DOM) -->
 
-        <!-- Seletor de Idiomas Customizado -->
-        <div class="lang-selector">
-            <button class="lang-btn active" onclick="changeLanguage('pt', this)" title="Português">
-                <img src="https://flagcdn.com/w40/pt.png" alt="PT">
-                <span>PT</span>
-            </button>
-            <button class="lang-btn" onclick="changeLanguage('en', this)" title="English">
-                <img src="https://flagcdn.com/w40/gb.png" alt="EN">
-                <span>EN</span>
-            </button>
-            <button class="lang-btn" onclick="changeLanguage('fr', this)" title="Français">
-                <img src="https://flagcdn.com/w40/fr.png" alt="FR">
-                <span>FR</span>
-            </button>
-            <button class="lang-btn" onclick="changeLanguage('es', this)" title="Español">
-                <img src="https://flagcdn.com/w40/es.png" alt="ES">
-                <span>ES</span>
-            </button>
-        </div>
 
         <section class="route-section">
             <div class="route-header">
@@ -223,9 +208,16 @@ $userLang = $_SESSION["language"] ?? 'pt';
                 </button>
             </div>
             
+            <div id="route-summary" class="route-summary" style="display:none;">
+                <div>
+                    <span id="route-distance"><i class="ph-bold ph-map-trifold"></i> -- km</span>
+                    <span id="route-time"><i class="ph-bold ph-clock"></i> -- min</span>
+                </div>
+            </div>
+            
             <ul id="route-list" class="route-list">
                 <li class="empty-state">
-                    <i class="ph ph-mask-happy"></i>
+                    <i class="ph-fill ph-map-trifold"></i>
                     <p>Clica num ponto no mapa para o adicionar à tua rota.</p>
                 </li>
             </ul>
@@ -324,6 +316,30 @@ $userLang = $_SESSION["language"] ?? 'pt';
         </div>
     </div>
 
+    <!-- Modal de Início de Rota -->
+    <div id="startRouteModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; text-align:center;">
+            <button class="modal-close" onclick="document.getElementById('startRouteModal').style.display='none'">
+                <i class="ph-bold ph-x"></i>
+            </button>
+            <i class="ph-fill ph-map-pin-line" style="font-size:48px; color:var(--primary); margin-bottom:16px;"></i>
+            <h2 style="margin-bottom: 8px; color: var(--primary);">Como queres começar?</h2>
+            <p style="color:var(--text-muted); margin-bottom:24px; font-size:14px;">Define o ponto de partida para o teu roteiro em Famalicão.</p>
+            
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <button class="btn btn-primary" onclick="confirmStartRoute('gps')" style="background:var(--primary);">
+                    <i class="ph-bold ph-crosshair"></i> A Minha Localização Atual
+                </button>
+                <button id="btn-start-selected" class="btn btn-secondary" onclick="confirmStartRoute('selected')">
+                    <i class="ph-bold ph-map-pin"></i> Este Local no Mapa
+                </button>
+                <button id="btn-start-browse" class="btn btn-outline" onclick="document.getElementById('startRouteModal').style.display='none'" style="border:1px solid var(--border); padding:12px; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer;">
+                    Eu escolho no mapa...
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal para Guardar Rota -->
     <div id="saveRouteModal" class="modal-overlay">
         <div class="modal-content" style="max-width: 400px;">
@@ -389,6 +405,9 @@ $userLang = $_SESSION["language"] ?? 'pt';
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Leaflet Routing Machine JS -->
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
     <script src="ui_notifications.js"></script>
     <script src="script.js?v=<?php echo time(); ?>"></script>
     <?php include "translation_footer.php"; ?>
