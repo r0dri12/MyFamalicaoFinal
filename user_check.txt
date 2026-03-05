@@ -1,0 +1,38 @@
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [username] => r0dri12
+            [is_admin] => 1
+        )
+
+    [1] => Array
+        (
+            [id] => 5
+            [username] => 1234
+            [is_admin] => 0
+        )
+
+    [2] => Array
+        (
+            [id] => 6
+            [username] => russo
+            [is_admin] => 0
+        )
+
+    [3] => Array
+        (
+            [id] => 7
+            [username] => r0dri69
+            [is_admin] => 0
+        )
+
+    [4] => Array
+        (
+            [id] => 8
+            [username] => tomas08
+            [is_admin] => 0
+        )
+
+)

@@ -21,21 +21,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $json_input && !$data) {
 try {
     // GET: Listar todos os pontos públicos com estatísticas sociais
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
-        $sql = "SELECT p.*, u.username as owner_name,
-                (SELECT COUNT(*) FROM poi_likes WHERE poi_id = p.id) as likes_count,
-                (SELECT COUNT(*) FROM poi_likes WHERE poi_id = p.id AND user_id = :current_user_id) as user_liked,
-                (SELECT COUNT(*) FROM poi_comments WHERE poi_id = p.id) as comments_count
-                FROM custom_pois p
-                JOIN users u ON p.user_id = u.id
-                WHERE p.is_public = 1
-                ORDER BY p.id DESC";
+        $type = $_GET['type'] ?? 'pois';
 
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(":current_user_id", $user_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($type == 'pois') {
+            $sql = "SELECT p.*, u.username as owner_name,
+                    (SELECT COUNT(*) FROM poi_likes WHERE poi_id = p.id) as likes_count,
+                    (SELECT COUNT(*) FROM poi_likes WHERE poi_id = p.id AND user_id = :current_user_id) as user_liked,
+                    (SELECT COUNT(*) FROM poi_comments WHERE poi_id = p.id) as comments_count
+                    FROM custom_pois p
+                    JOIN users u ON p.user_id = u.id
+                    WHERE p.is_public = 1
+                    ORDER BY p.id DESC";
 
-        echo json_encode(["status" => "success", "pois" => $pois]);
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(":current_user_id", $user_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode(["status" => "success", "pois" => $pois]);
+        } 
+        elseif ($type == 'routes') {
+            $sql = "SELECT r.*, u.username as owner_name,
+                    (SELECT COUNT(DISTINCT poi_id) FROM route_items WHERE route_id = r.id) as points_count
+                    FROM saved_routes r
+                    JOIN users u ON r.user_id = u.id
+                    WHERE r.is_public = 1
+                    ORDER BY r.id DESC";
+            
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $routes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode(["status" => "success", "routes" => $routes]);
+        }
     }
 
     // POST: Ações sociais

@@ -331,9 +331,19 @@ $userLang = $_SESSION["language"] ?? 'pt';
                 <i class="ph-bold ph-x"></i>
             </button>
             <h2 style="margin-bottom: 20px; color: var(--primary);"><i class="ph-fill ph-floppy-disk"></i> Guardar Rota</h2>
-            <div class="form-group" style="margin-bottom: 20px;">
+            <div class="form-group" style="margin-bottom: 16px;">
                 <label style="display:block; margin-bottom:8px; font-weight:600; font-size:14px;">Nome do Roteiro</label>
                 <input type="text" id="route-name-input" placeholder="Ex: Passeio de Domingo" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-family:inherit;">
+            </div>
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label style="display:block; margin-bottom:8px; font-weight:600; font-size:14px;">Descrição (Opcional)</label>
+                <textarea id="route-desc-input" placeholder="Breve descrição do teu percurso..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-family:inherit; height: 80px; resize: none;"></textarea>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:14px;">
+                    <input type="checkbox" id="route-public-checkbox" style="width:18px; height:18px;"> 
+                    <span>Tornar público para a comunidade</span>
+                </label>
             </div>
             <button class="btn btn-primary" onclick="confirmSaveRoute()" style="width:100%; background:#10b981;">Guardar Roteiro</button>
         </div>

@@ -1,6 +1,20 @@
 <?php
 // translation_loader.php
 // Este componente deve ser incluído no início do <body> de todas as páginas.
+
+// Sync admin status
+if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+    require_once "db_connect.php";
+    try {
+        $stmtSync = $conn->prepare("SELECT is_admin FROM users WHERE id = :id");
+        $stmtSync->execute(['id' => $_SESSION["id"]]);
+        $userSync = $stmtSync->fetch(PDO::FETCH_ASSOC);
+        if ($userSync) {
+            $_SESSION["is_admin"] = $userSync['is_admin'];
+        }
+    } catch (Exception $e) {
+    }
+}
 ?>
 <div id="global-loader" class="global-loader">
     <div class="loader-content">

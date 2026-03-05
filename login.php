@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($username_err) && empty($password_err)) {
-        $sql = "SELECT id, username, password, language FROM users WHERE username = :username";
+        $sql = "SELECT id, username, password, language, is_admin FROM users WHERE username = :username";
 
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION["id"] = $id;
                             $_SESSION["username"] = $username;
                             $_SESSION["language"] = $row["language"] ?? 'pt';
+                            $_SESSION["is_admin"] = $row["is_admin"] ?? 0;
 
                             header("location: map");
                         }

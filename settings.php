@@ -325,6 +325,9 @@ else {
                     <a href="map" class="btn btn-primary-sm" title="Mapa">
                         <i class="ph-bold ph-map-trifold"></i> <span class="greeting-name">Mapa</span>
                     </a>
+                    <?php if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"] == 1): ?>
+                    <a href="admin" class="btn-admin-special" style="margin: 0 5px;">Admin</a>
+                    <?php endif; ?>
                     <a href="logout" class="btn btn-danger-sm" title="Sair">
                         <i class="ph-bold ph-sign-out"></i>
                     </a>

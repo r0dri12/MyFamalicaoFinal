@@ -678,14 +678,13 @@ window.openSaveRouteModal = function () {
 };
 
 window.confirmSaveRoute = function () {
-    const name = document.getElementById('route-name-input').value.trim();
-    if (!name) {
-        myFama.toast("Dá um nome à tua rota!", "warning");
-        return;
-    }
+    const description = document.getElementById('route-desc-input').value.trim();
+    const isPublic = document.getElementById('route-public-checkbox').checked ? 1 : 0;
 
     const payload = {
         name: name,
+        description: description,
+        is_public: isPublic,
         items: currentRoute.map(p => String(p.id))
     };
 
@@ -745,10 +744,20 @@ window.loadRouteFromHistory = function (id) {
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                // Re-populate currentRoute from list of IDs
                 const newRoute = [];
-                data.items.forEach(poiId => {
-                    const poi = pois.find(p => String(p.id) === String(poiId));
+                data.items.forEach(item => {
+                    let poi;
+                    if (item.is_hardcoded) {
+                        poi = pois.find(p => String(p.id) === String(item.id));
+                    } else {
+                        // It's a custom POI from potentially another user
+                        poi = pois.find(p => String(p.id) === String(item.id));
+                        if (!poi) {
+                            poi = item;
+                            pois.push(poi);
+                            addMarkerToMap(poi, userIcon);
+                        }
+                    }
                     if (poi) newRoute.push(poi);
                 });
 
@@ -757,12 +766,23 @@ window.loadRouteFromHistory = function (id) {
                     updateRouteUI();
                     document.getElementById('historyModal').style.display = 'none';
                     myFama.toast("Rota carregada com sucesso!", "success");
+
+                    // Zoom to fit the route
+                    const bounds = L.latLngBounds(newRoute.map(p => p.coords));
+                    map.fitBounds(bounds, { padding: [50, 50] });
                 } else {
-                    myFama.alert("Erro", "Alguns locais nesta rota já não estão disponíveis.", "warning");
+                    myFama.alert("Erro", "Não foi possível carregar os locais desta rota.", "error");
                 }
             }
         });
 };
+
+// Check for route in URL on startup
+const urlParams = new URLSearchParams(window.location.search);
+const loadRouteId = urlParams.get('load_route');
+if (loadRouteId) {
+    setTimeout(() => window.loadRouteFromHistory(loadRouteId), 1000);
+}
 
 window.deleteRoute = async function (id) {
     const confirmed = await myFama.confirm("Eliminar Rota", "Tens a certeza que queres eliminar este roteiro guardado?");

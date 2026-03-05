@@ -1,4 +1,4 @@
-/* Notification System Styles - MyFamalicão */
+/* Modern & Premium Notification System - MyFamalicão */
 
 /* Container for Toasts */
 #fama-toast-container {
@@ -14,26 +14,26 @@
 
 .fama-toast {
     pointer-events: auto;
-    min-width: 300px;
+    min-width: 320px;
     max-width: 450px;
-    padding: 16px 20px;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 18px 24px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
     display: flex;
     align-items: center;
     gap: 16px;
-    animation: toastScaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    transition: all 0.3s ease;
+    animation: toastSlideIn 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes toastScaleIn {
+@keyframes toastSlideIn {
     from {
         opacity: 0;
-        transform: translateX(50px) scale(0.9);
+        transform: translateX(100px) scale(0.9);
     }
 
     to {
@@ -44,18 +44,19 @@
 
 .fama-toast.hiding {
     opacity: 0;
-    transform: translateX(50px) scale(0.9);
+    transform: translateX(100px) scale(0.9);
 }
 
 .fama-toast-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 22px;
     flex-shrink: 0;
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .fama-toast-content {
@@ -63,16 +64,16 @@
 }
 
 .fama-toast-title {
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 4px;
+    font-weight: 800;
+    font-size: 15px;
+    margin-bottom: 2px;
     color: #0f172a;
 }
 
 .fama-toast-message {
-    font-size: 13px;
+    font-size: 13.5px;
     color: #64748b;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 /* Alert Modal Overlay */
@@ -82,9 +83,9 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(15, 23, 42, 0.4);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 11000;
     display: none;
     align-items: center;
@@ -93,20 +94,21 @@
 }
 
 .fama-modal {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     width: 100%;
-    max-width: 420px;
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    max-width: 440px;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
     text-align: center;
-    animation: modalScaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    animation: modalSpringIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes modalScaleIn {
+@keyframes modalSpringIn {
     from {
         opacity: 0;
-        transform: translateY(20px) scale(0.95);
+        transform: translateY(40px) scale(0.8);
     }
 
     to {
@@ -116,108 +118,121 @@
 }
 
 .fama-modal-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 20px;
-    margin: 0 auto 20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 24px;
+    margin: 0 auto 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 40px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Pulse animation for modal icon */
+.fama-modal-icon.error-bg {
+    animation: dangerPulse 2s infinite;
+}
+
+@keyframes dangerPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
 }
 
 .fama-modal h2 {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 24px;
+    font-weight: 800;
     margin-bottom: 12px;
     color: #0f172a;
+    letter-spacing: -0.5px;
 }
 
 .fama-modal p {
-    font-size: 15px;
-    color: #64748b;
+    font-size: 16px;
+    color: #475569;
     line-height: 1.6;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
 }
 
 .fama-modal-actions {
     display: flex;
-    gap: 12px;
+    gap: 14px;
 }
 
 .fama-btn {
     flex: 1;
-    padding: 12px 24px;
-    border-radius: 12px;
+    padding: 14px 24px;
+    border-radius: 16px;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     border: none;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fama-btn:active {
+    transform: scale(0.96);
 }
 
 .fama-btn-primary {
-    background: #3b82f6;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .fama-btn-primary:hover {
-    background: #2563eb;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
     transform: translateY(-2px);
 }
 
 .fama-btn-secondary {
     background: #f1f5f9;
     color: #0f172a;
+    border: 1px solid #e2e8f0;
 }
 
 .fama-btn-secondary:hover {
     background: #e2e8f0;
-}
-
-.fama-btn-danger {
-    background: #ef4444;
-    color: white;
-}
-
-.fama-btn-danger:hover {
-    background: #dc2626;
     transform: translateY(-2px);
 }
 
-/* Types */
-.success {
-    color: #10b981;
+.fama-btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
 }
 
+.fama-btn-danger:hover {
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Backgrounds */
 .success-bg {
-    background: #ecfdf5;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
     color: #10b981;
-}
-
-.error {
-    color: #ef4444;
 }
 
 .error-bg {
-    background: #fef2f2;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
     color: #ef4444;
 }
 
-.info {
-    color: #3b82f6;
-}
-
 .info-bg {
-    background: #eff6ff;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
     color: #3b82f6;
-}
-
-.warning {
-    color: #f59e0b;
 }
 
 .warning-bg {
-    background: #fffbeb;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
     color: #f59e0b;
 }
