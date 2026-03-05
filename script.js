@@ -8,10 +8,16 @@ const map = L.map('map', {
 
 // Adicionar a camada de mapa (estilo claro moderno do CartoDB)
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    attribution: '<span class="notranslate">&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a></span>',
     subdomains: 'abcd',
     maxZoom: 20
 }).addTo(map);
+
+// Forçar o mapa a desenhar-se corretamente
+setTimeout(() => {
+    map.invalidateSize();
+    console.log("Mapa reinicializado para garantir visibilidade.");
+}, 500);
 
 // Reposicionar o controlo de zoom para não sobrepor a sidebar
 L.control.zoom({

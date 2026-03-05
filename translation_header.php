@@ -26,25 +26,40 @@ $userLang = $_SESSION["language"] ?? 'pt';
         }, 'google_translate_element');
     }
 
-    function changeLanguage(langCode, btn) {
-        // 1. Atualizar UI se o botão existir
+    async function changeLanguage(langCode, btn) {
+        console.log("A mudar idioma para:", langCode);
+        
+        // 1. Definir cookie IMEDIATAMENTE antes de qualquer outra coisa
+        var langPath = '/pt/' + langCode;
+        document.cookie = "googtrans=" + langPath + "; path=/; SameSite=Lax";
+        document.cookie = "googtrans=" + langPath + "; domain=" + document.domain + "; path=/; SameSite=Lax";
+
+        // 2. Atualizar UI visual
         if (btn) {
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
 
-        // 2. Definir cookies
-        var langPath = '/pt/' + langCode;
-        document.cookie = "googtrans=" + langPath + "; path=/";
-        document.cookie = "googtrans=" + langPath + "; domain=" + document.domain + "; path=/";
-        
-        // 3. Notificar áudio-guia se no mapa
-        if (window.updateAudioLanguage) {
-            window.updateAudioLanguage(langCode);
+        // 3. Tentar gravar na BD para persistência futura
+        try {
+            const response = await fetch("api_update_profile.php", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ language: langCode })
+            });
+            
+            // 4. Se estiver no mapa, avisar o script.js
+            if (window.updateAudioLanguage) {
+                window.updateAudioLanguage(langCode);
+            }
+        } catch (err) {
+            console.error("Erro ao gravar na BD:", err);
         }
 
-        // 4. Recarregar
-        location.reload();
+        // 5. Recarregar após um pequeno delay para garantir que os cookies "assentam"
+        setTimeout(() => {
+            location.reload();
+        }, 300);
     }
 </script>
 

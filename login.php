@@ -69,8 +69,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="<?php echo $_SESSION['language'] ?? 'pt'; ?>">
 <head>
+    <?php include "translation_header.php"; ?>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="favicon.png">
     <title>Login - MyFamalicão</title>
@@ -127,5 +128,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
     <?php
 endif; ?>
+    <?php include "translation_footer.php"; ?>
 </body>
 </html>

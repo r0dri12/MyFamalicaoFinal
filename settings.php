@@ -46,8 +46,9 @@ else {
 }
 ?>
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="<?php echo $_SESSION['language'] ?? 'pt'; ?>">
 <head>
+    <?php include "translation_header.php"; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
@@ -487,5 +488,6 @@ endif; ?>
         }
     </script>
     <script src="ui_notifications.js"></script>
+    <?php include "translation_footer.php"; ?>
 </body>
 </html>
