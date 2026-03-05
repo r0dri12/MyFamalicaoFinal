@@ -1,7 +1,7 @@
 <?php
 require_once "db_connect.php";
 
-$full_name = $username = $password = $confirm_password = "";
+$full_name = $username = $password = $confirm_password = $language = "";
 $full_name_err = $username_err = $password_err = $confirm_password_err = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -64,17 +64,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if (empty($full_name_err) && empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
-        $sql = "INSERT INTO users (full_name, username, password) VALUES (:full_name, :username, :password)";
+    // Language Validation
+    if (empty(trim($_POST["language"]))) {
+        $language = "pt";
+    }
+    else {
+        $language = trim($_POST["language"]);
+    }
 
+    if (empty($full_name_err) && empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
+        $sql = "INSERT INTO users (full_name, username, password, language) VALUES (:full_name, :username, :password, :language)";
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bindParam(":full_name", $param_full_name, PDO::PARAM_STR);
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
             $stmt->bindParam(":password", $param_password, PDO::PARAM_STR);
+            $stmt->bindParam(":language", $param_language, PDO::PARAM_STR);
 
             $param_full_name = $full_name;
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT);
+            $param_language = $language;
 
             if ($stmt->execute()) {
                 header("location: login");
@@ -92,6 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html lang="pt">
 <head>
+    <?php include "translation_header.php"; ?>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="favicon.png">
     <title>Registo - MyFamalicão</title>
@@ -146,6 +156,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
                 </div>
                 <div class="form-group">
+                    <label>Idioma Preferido</label>
+                    <div class="input-wrapper">
+                        <i class="ph ph-translate"></i>
+                        <select name="language" class="form-control">
+                            <option value="pt" selected>Português</option>
+                            <option value="en">English (Inglês)</option>
+                            <option value="fr">Français (Francês)</option>
+                            <option value="es">Español (Espanhol)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <button type="submit" class="btn btn-primary" style="width:100%">Criar Conta <i class="ph-bold ph-arrow-right"></i></button>
                     <button type="reset" class="btn btn-secondary" style="width:100%; margin-top: 10px;">Limpar</button>
                 </div>
@@ -154,6 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
     <script src="ui_notifications.js"></script>
+    <?php include "translation_footer.php"; ?>
     <?php
 $any_err = "";
 if (!empty($username_err))

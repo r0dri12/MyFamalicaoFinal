@@ -10,12 +10,15 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 $user_id = $_SESSION["id"];
 
-// Get user data (now includes full_name and profile_picture)
-$sql = "SELECT username, full_name, profile_picture, created_at FROM users WHERE id = :id";
+// Get user data (now includes full_name, profile_picture, and language)
+$sql = "SELECT username, full_name, profile_picture, created_at, language FROM users WHERE id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(":id", $user_id, PDO::PARAM_INT);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Update session language if it differs (sync)
+$_SESSION["language"] = $user['language'] ?? 'pt';
 
 // Count custom POIs
 $sql_count = "SELECT COUNT(*) as total FROM custom_pois WHERE user_id = :id";
@@ -371,6 +374,15 @@ endif; ?>
                         <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['username']); ?>" disabled>
                         <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">O nome de utilizador não pode ser alterado.</small>
                     </div>
+                    <div class="form-group">
+                        <label>Idioma Preferido</label>
+                        <select id="languageInput" class="form-control">
+                            <option value="pt" <?php echo($user['language'] == 'pt') ? 'selected' : ''; ?>>Português</option>
+                            <option value="en" <?php echo($user['language'] == 'en') ? 'selected' : ''; ?>>English (Inglês)</option>
+                            <option value="fr" <?php echo($user['language'] == 'fr') ? 'selected' : ''; ?>>Français (Francês)</option>
+                            <option value="es" <?php echo($user['language'] == 'es') ? 'selected' : ''; ?>>Español (Espanhol)</option>
+                        </select>
+                    </div>
                     <button type="button" class="btn btn-primary" onclick="saveProfile()" style="width: 100%;">
                         <i class="ph-bold ph-floppy-disk"></i> Guardar Alterações
                     </button>
@@ -433,15 +445,19 @@ endif; ?>
             });
         }
 
-        // Save profile (full name)
+        // Save profile (full name & language)
         function saveProfile() {
             const fullName = document.getElementById("fullNameInput").value;
+            const language = document.getElementById("languageInput").value;
             const toast = document.getElementById("uploadToast");
 
             fetch("api_update_profile.php", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ full_name: fullName })
+                body: JSON.stringify({ 
+                    full_name: fullName,
+                    language: language 
+                })
             })
             .then(res => res.json())
             .then(data => {
@@ -449,6 +465,19 @@ endif; ?>
                 if(data.status === "success") {
                     toast.className = "upload-toast";
                     toast.textContent = "✅ Perfil atualizado com sucesso!";
+                    
+                    // Set translation cookie instantly
+                    if (language !== 'pt') {
+                        const langPath = '/pt/' + language;
+                        document.cookie = "googtrans=" + langPath + "; path=/";
+                        document.cookie = "googtrans=" + langPath + "; domain=" + document.domain + "; path=/";
+                    } else {
+                        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=" + document.domain + "; path=/;";
+                    }
+                    
+                    // Reload after a short delay to apply translation across the UI
+                    setTimeout(() => { location.reload(); }, 1000);
                 } else {
                     toast.className = "upload-toast error";
                     toast.textContent = "❌ Erro: " + data.message;

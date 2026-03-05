@@ -384,6 +384,59 @@ map.on('locationerror', function (e) {
 
 let speechUtterance = null;
 let isPlayingRoute = false;
+let currentAudioLang = 'pt-PT';
+let preferredVoice = null;
+
+// Função para buscar a melhor voz disponível automaticamente
+function loadVoices() {
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length === 0) return;
+
+    // Mapeamento de códigos de idioma para tags BCP 47
+    const langMap = {
+        'pt': 'pt-PT',
+        'en': 'en-GB',
+        'fr': 'fr-FR',
+        'es': 'es-ES'
+    };
+
+    const targetLang = langMap[currentAudioLang.split('-')[0]] || currentAudioLang;
+
+    // Prioridade para vozes de alta qualidade no idioma selecionado
+    preferredVoice = voices.find(v => v.lang.startsWith(targetLang.split('-')[0]) && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Helia'))) ||
+        voices.find(v => v.lang.startsWith(targetLang.split('-')[0])) ||
+        voices[0];
+
+    if (preferredVoice) {
+        console.log(`Áudio-Guia configurado para [${targetLang}] com a voz:`, preferredVoice.name);
+    }
+}
+
+// Função chamada pelo map.php quando o idioma muda
+window.updateAudioLanguage = function (langCode) {
+    currentAudioLang = langCode;
+    loadVoices(); // Recarregar a voz ideal para o novo idioma
+
+    // Pequeno feedback sonoro no novo idioma (se não for PT para não chatear)
+    if (langCode !== 'pt') {
+        const welcome = {
+            'en': 'Language changed to English',
+            'fr': 'Langue changée en Français',
+            'es': 'Idioma cambiado a Español'
+        };
+        const utter = new SpeechSynthesisUtterance(welcome[langCode]);
+        utter.voice = preferredVoice;
+        utter.lang = preferredVoice.lang;
+        window.speechSynthesis.speak(utter);
+    }
+};
+
+// Garantir que as vozes são carregadas (essencial para Chrome/Edge)
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+setTimeout(loadVoices, 500);
+loadVoices();
 
 window.speakPOI = function (id) {
     const poi = pois.find(p => String(p.id) === String(id));
@@ -394,8 +447,15 @@ window.speakPOI = function (id) {
 
     const textToSpeak = `${poi.name}. ${poi.description}`;
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.lang = 'pt-PT';
-    utterance.rate = 0.9; // Um pouco mais lento para ser percetível
+
+    if (preferredVoice) {
+        utterance.voice = preferredVoice;
+    }
+
+    utterance.lang = preferredVoice ? preferredVoice.lang : (currentAudioLang === 'pt' ? 'pt-PT' : currentAudioLang);
+    utterance.rate = 1.0; // Velocidade standard, ligeiramente ajustada pela voz natural
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
 
     window.speechSynthesis.speak(utterance);
     speechUtterance = utterance;
@@ -427,12 +487,17 @@ window.playFullRouteAudio = function () {
         const poi = currentRoute[currentIndex];
         const textToSpeak = `Ponto ${currentIndex + 1}: ${poi.name}. ${poi.description}`;
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.lang = 'pt-PT';
-        utterance.rate = 0.9;
+
+        if (preferredVoice) {
+            utterance.voice = preferredVoice;
+        }
+
+        utterance.lang = preferredVoice ? preferredVoice.lang : (currentAudioLang === 'pt' ? 'pt-PT' : currentAudioLang);
+        utterance.rate = 1.0;
 
         utterance.onend = () => {
             currentIndex++;
-            setTimeout(speakNext, 1000); // Pausa de 1 segundo entre locais
+            setTimeout(speakNext, 1200); // Pausa ligeiramente maior entre locais para naturalidade
         };
 
         window.speechSynthesis.speak(utterance);

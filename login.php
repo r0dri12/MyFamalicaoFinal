@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($username_err) && empty($password_err)) {
-        $sql = "SELECT id, username, password FROM users WHERE username = :username";
+        $sql = "SELECT id, username, password, language FROM users WHERE username = :username";
 
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
@@ -45,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
                             $_SESSION["username"] = $username;
+                            $_SESSION["language"] = $row["language"] ?? 'pt';
 
                             header("location: map");
                         }
@@ -111,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="invalid-feedback"><?php echo $password_err; ?></span>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary" style="width:100%">Entrar Seguro <i class="ph-bold ph-arrow-right"></i></button>
+                    <button type="submit" class="btn btn-primary" style="width:100%">Entrar <i class="ph-bold ph-arrow-right"></i></button>
                 </div>
                 <p class="auth-link">Não tens conta? <a href="register">Regista-te agora</a>.</p>
             </form>

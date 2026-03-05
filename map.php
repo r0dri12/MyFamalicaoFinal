@@ -2,18 +2,22 @@
 session_start();
 
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    header("location: index");
+    header("location: login");
     exit;
 }
+
+// Auto-Translate logic based on User Preference
+$userLang = $_SESSION["language"] ?? 'pt';
 ?>
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="<?php echo $userLang; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
-    <title>MyFamalicão - Roteiro Interativo</title>
-
+    <title>MyFamalicão - Mapa Interativo</title>
+    <?php include "translation_header.php"; ?>
+    
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,6 +78,83 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         .btn-logout:hover {
             background: #fee2e2;
         }
+
+        /* Language Selector Styling */
+        .lang-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .lang-btn {
+            flex: 1;
+            padding: 8px 4px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .lang-btn img {
+            width: 20px;
+            height: 15px;
+            object-fit: cover;
+            border-radius: 2px;
+            filter: grayscale(0.2);
+        }
+        .lang-btn span {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .lang-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light, #f0f7ff);
+        }
+        .lang-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+        .lang-btn.active span {
+            color: white;
+        }
+        .lang-btn.active img {
+            filter: none;
+        }
+
+        /* Hide Google Translate original UI components */
+        #google_translate_element {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+        .goog-te-banner-frame.skiptranslate, 
+        .goog-te-gadget-icon,
+        .goog-te-banner,
+        iframe.skiptranslate,
+        #goog-gt-tt,
+        .goog-te-balloon-frame {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        body {
+            top: 0px !important;
+        }
+        .goog-te-gadget-simple {
+            background-color: transparent !important;
+            border: none !important;
+        }
     </style>
 </head>
 <body>
@@ -112,6 +193,28 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             <a href="logout" class="btn-logout" title="Terminar Sessão">
                 <i class="ph-bold ph-sign-out"></i>
             </a>
+        </div>
+
+        <!-- Tradução Automática (Invisível mas 'presente' para o DOM) -->
+
+        <!-- Seletor de Idiomas Customizado -->
+        <div class="lang-selector">
+            <button class="lang-btn active" onclick="changeLanguage('pt', this)" title="Português">
+                <img src="https://flagcdn.com/w40/pt.png" alt="PT">
+                <span>PT</span>
+            </button>
+            <button class="lang-btn" onclick="changeLanguage('en', this)" title="English">
+                <img src="https://flagcdn.com/w40/gb.png" alt="EN">
+                <span>EN</span>
+            </button>
+            <button class="lang-btn" onclick="changeLanguage('fr', this)" title="Français">
+                <img src="https://flagcdn.com/w40/fr.png" alt="FR">
+                <span>FR</span>
+            </button>
+            <button class="lang-btn" onclick="changeLanguage('es', this)" title="Español">
+                <img src="https://flagcdn.com/w40/es.png" alt="ES">
+                <span>ES</span>
+            </button>
         </div>
 
         <section class="route-section">
@@ -191,9 +294,34 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         </div>
     </div>
 
+    <!-- Tradução Scripts -->
+    <script type="text/javascript">
+        // Ao carregar a página, marcar o botão correto com base no cookie
+        document.addEventListener('DOMContentLoaded', function() {
+            var cookies = document.cookie.split(';');
+            var currentLang = 'pt';
+            for(var i=0; i < cookies.length; i++) {
+                if(cookies[i].trim().indexOf('googtrans=') === 0) {
+                    currentLang = cookies[i].split('/').pop();
+                    break;
+                }
+            }
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                const onclickAttr = btn.getAttribute('onclick');
+                if(onclickAttr && onclickAttr.includes("'" + currentLang + "'")) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="ui_notifications.js"></script>
     <script src="script.js?v=<?php echo time(); ?>"></script>
+    <?php include "translation_footer.php"; ?>
 </body>
 </html>
