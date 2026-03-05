@@ -7,6 +7,11 @@
     --text-muted: #64748b;
     --border: #e2e8f0;
     --danger: #ef4444;
+    --navbar-bg: rgba(255, 255, 255, 0.9);
+    --badge-soon-bg: #fef3c7;
+    --badge-soon-text: #d97706;
+    --btn-secondary-bg: rgba(241, 245, 249, 0.8);
+    --btn-danger-bg: #fef2f2;
 }
 
 [data-theme="dark"] {
@@ -15,6 +20,11 @@
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
     --border: #334155;
+    --navbar-bg: rgba(15, 23, 42, 0.9);
+    --badge-soon-bg: #451a03;
+    --badge-soon-text: #fbbf24;
+    --btn-secondary-bg: rgba(51, 65, 85, 0.8);
+    --btn-danger-bg: #450a0a;
 }
 
 * {
@@ -27,12 +37,10 @@
 @keyframes pageFadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
@@ -41,6 +49,18 @@ body {
     color: var(--text-main);
     line-height: 1.6;
     animation: pageFadeIn 0.8s ease-out forwards;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar,
+.settings-sidebar,
+.settings-panel,
+.feature-card,
+.about-card,
+.poi-card,
+.route-card,
+.modal {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 a {
@@ -50,7 +70,7 @@ a {
 
 /* === NAVBAR === */
 .navbar {
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--navbar-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
@@ -232,7 +252,7 @@ a {
 }
 
 .btn-danger-sm {
-    background: #fef2f2;
+    background: var(--btn-danger-bg);
     color: var(--danger);
     padding: 10px;
     font-size: 18px;
@@ -248,7 +268,7 @@ a {
 }
 
 .btn-secondary {
-    background: rgba(241, 245, 249, 0.8);
+    background: var(--btn-secondary-bg);
     backdrop-filter: blur(4px);
     color: var(--text-main);
     padding: 14px 28px;
@@ -272,7 +292,7 @@ a {
 }
 
 .btn-outline:hover {
-    background: white;
+    background: var(--surface);
     border-color: var(--primary);
     color: var(--primary);
     transform: translateY(-1px);
@@ -392,8 +412,8 @@ a {
 
 .soon-badge {
     display: inline-block;
-    background: #fef3c7;
-    color: #d97706;
+    background: var(--badge-soon-bg);
+    color: var(--badge-soon-text);
     font-size: 11px;
     padding: 2px 8px;
     border-radius: 999px;

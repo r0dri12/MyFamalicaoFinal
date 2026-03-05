@@ -374,6 +374,7 @@ endif; ?>
 
             <ul class="settings-nav">
                 <li><a href="#perfil" class="active"><i class="ph-bold ph-identification-card"></i> O Meu Perfil</a></li>
+                <li><a href="#aparencia"><i class="ph-bold ph-palette"></i> Aparência</a></li>
                 <li><a href="#atividade"><i class="ph-bold ph-chart-bar"></i> A Minha Atividade</a></li>
                 <li style="margin-top: 28px;"><a href="logout" class="danger"><i class="ph-bold ph-sign-out"></i> Terminar Sessão</a></li>
             </ul>
@@ -412,6 +413,18 @@ endif; ?>
                         <i class="ph-bold ph-floppy-disk"></i> Guardar Alterações
                     </button>
                 </form>
+            </div>
+
+            <!-- Aparência -->
+            <div class="settings-panel" id="aparencia">
+                <h3 class="section-title"><i class="ph-fill ph-palette"></i> Aparência</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Personaliza o visual da aplicação para o que for mais confortável para ti.</p>
+                <div class="form-group">
+                    <label>Tema da Aplicação</label>
+                    <button type="button" id="theme-toggle-btn" class="btn btn-secondary" onclick="toggleTheme()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i class="ph-bold ph-moon"></i> Mudar para Modo Escuro
+                    </button>
+                </div>
             </div>
 
             <!-- Atividade -->

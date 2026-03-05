@@ -242,7 +242,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 20px;
         }
         .modal {
-            background: white;
+            background: var(--surface);
             border-radius: 20px;
             width: 100%;
             max-width: 500px;

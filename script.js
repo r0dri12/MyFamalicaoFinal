@@ -170,7 +170,7 @@ const pois = [
         name: "Parque da Devesa",
         coords: [41.4042, -8.5147],
         description: "Um dos maiores parques urbanos do país, ideal para caminhadas e lazer.",
-        image: "https://images.unsplash.com/photo-1587844053648-2895ea305260?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", // Placeholder
+        image: "https://www.parquedadevesa.com/op/image/?co=1113&h=ccd6c",
         type: "Natureza"
     },
     {
@@ -178,7 +178,7 @@ const pois = [
         name: "Museu Bernardino Machado",
         coords: [41.4085, -8.5205],
         description: "Espaço dedicado à vida e obra do antigo Presidente da República.",
-        image: "https://images.unsplash.com/photo-1541123437800-1bb1317bc951?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        image: "https://www.famalicao.pt/op/image/?co=183709&h=8dc50",
         type: "Cultura"
     },
     {
@@ -186,7 +186,7 @@ const pois = [
         name: "Fundação Cupertino de Miranda",
         coords: [41.4055, -8.5190],
         description: "Centro de Estudo do Surrealismo e Torre com características únicas.",
-        image: "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        image: "https://rpac.pt/_rpac/wp-content/uploads/2023/09/Fundacao-Cupertino-Miranda-Exterior-2-FCM_2_ext.jpg",
         type: "Arte"
     },
     {
@@ -194,7 +194,7 @@ const pois = [
         name: "Igreja Matriz Nova",
         coords: [41.4068, -8.5175],
         description: "Monumento religioso central com arquitetura imponente.",
-        image: "https://images.unsplash.com/photo-1548625361-ec8571ea7ab0?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        image: "https://images.mnstatic.com/83/ff/83ff5471cac7e0b42b062e0a16024e7c.jpg",
         type: "Monumento"
     }
 ];
@@ -294,6 +294,14 @@ map.on('click', function (e) {
     `;
 
     tempMarker.bindPopup(formHtml, { closeButton: false }).openPopup();
+
+    // Se o popup for fechado (clicando fora ou no cancelar), removemos o marcador
+    tempMarker.on('popupclose', function () {
+        if (tempMarker) {
+            map.removeLayer(tempMarker);
+            tempMarker = null;
+        }
+    });
 });
 
 // Função para Guardar Ponto Personalizado na BD

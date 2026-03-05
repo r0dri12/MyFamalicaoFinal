@@ -4,6 +4,7 @@
 
 $userLang = $_SESSION["language"] ?? 'pt';
 ?>
+<script src="theme_handler.js"></script>
 <!-- Google Translate Logic -->
 <script>
     (function() {
