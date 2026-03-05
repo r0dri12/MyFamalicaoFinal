@@ -16,10 +16,23 @@
     font-family: 'Inter', sans-serif;
 }
 
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 body {
     background-color: var(--background);
     color: var(--text-main);
     line-height: 1.6;
+    animation: pageFadeIn 0.8s ease-out forwards;
 }
 
 a {

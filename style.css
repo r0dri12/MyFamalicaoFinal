@@ -20,6 +20,16 @@
     box-sizing: border-box;
 }
 
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 body {
     font-family: 'Inter', sans-serif;
     color: var(--text-main);
@@ -28,6 +38,7 @@ body {
     width: 100vw;
     display: flex;
     overflow: hidden;
+    animation: pageFadeIn 1s ease-in forwards;
 }
 
 #map {

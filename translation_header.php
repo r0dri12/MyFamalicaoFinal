@@ -29,7 +29,10 @@ $userLang = $_SESSION["language"] ?? 'pt';
     async function changeLanguage(langCode, btn) {
         console.log("A mudar idioma para:", langCode);
         
-        // 1. Definir cookie IMEDIATAMENTE antes de qualquer outra coisa
+        // MOSTRAR LOADER APENAS QUANDO NECESSÁRIO (MUDANÇA DE IDIOMA)
+        if (window.showGlobalLoader) window.showGlobalLoader();
+
+        // 1. Definir cookie IMEDIATAMENTE
         var langPath = '/pt/' + langCode;
         document.cookie = "googtrans=" + langPath + "; path=/; SameSite=Lax";
         document.cookie = "googtrans=" + langPath + "; domain=" + document.domain + "; path=/; SameSite=Lax";

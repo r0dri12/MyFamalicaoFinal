@@ -291,6 +291,7 @@ else {
     </style>
 </head>
 <body>
+    <?php include "translation_loader.php"; ?>
 
     <!-- Navbar -->
     <nav class="navbar">

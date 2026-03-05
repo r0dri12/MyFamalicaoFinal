@@ -351,6 +351,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </style>
 </head>
 <body>
+    <?php include "translation_loader.php"; ?>
 
     <!-- Navbar -->
     <nav class="navbar">

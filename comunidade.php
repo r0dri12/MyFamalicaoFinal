@@ -179,6 +179,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     </style>
 </head>
 <body>
+    <?php include "translation_loader.php"; ?>
 
     <!-- Navegação Navbar -->
     <nav class="navbar">

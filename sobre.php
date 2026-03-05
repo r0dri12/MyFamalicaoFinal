@@ -83,6 +83,7 @@ session_start();
     </style>
 </head>
 <body>
+    <?php include "translation_loader.php"; ?>
 
     <!-- Navegação Navbar -->
     <nav class="navbar">

@@ -22,6 +22,7 @@ session_start();
     <link rel="stylesheet" href="ui_notifications.css">
 </head>
 <body>
+    <?php include "translation_loader.php"; ?>
 
     <!-- Navegação Navbar -->
     <nav class="navbar">
@@ -104,7 +105,7 @@ endif; ?>
         <div class="feature-card">
             <div class="feature-icon"><i class="ph-fill ph-speaker-high"></i></div>
             <h3>Áudio-Guia</h3>
-            <p>Acessibilidade para todos! Ouve a história de cada ponto por onde passas. <span class="soon-badge">Em Breve</span></p>
+            <p>Acessibilidade para todos! Ouve a história de cada ponto por onde passas. <span class="soon-badge">Funcionalidade Nova</span></p>
         </div>
     </section>
 

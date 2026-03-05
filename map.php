@@ -158,6 +158,7 @@ $userLang = $_SESSION["language"] ?? 'pt';
     </style>
 </head>
 <body>
+    <?php include "translation_loader.php"; ?>
 
     <!-- Mapa Container -->
     <div id="map"></div>
