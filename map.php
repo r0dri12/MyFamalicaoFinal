@@ -165,6 +165,9 @@ $userLang = $_SESSION["language"] ?? 'pt';
 
     <!-- Painel Lateral Glassmorphism -->
     <aside id="sidebar" class="sidebar">
+        <!-- Handle para Mobile -->
+        <div class="mobile-handle"></div>
+        
         <!-- Botão Voltar -->
         <div class="sidebar-nav-top">
             <a href="index" class="btn-side-nav"><i class="ph-bold ph-house"></i> Início</a>
@@ -172,13 +175,7 @@ $userLang = $_SESSION["language"] ?? 'pt';
             <a href="meus_locais" class="btn-side-nav"><i class="ph-bold ph-heart-straight"></i> Meus Locais</a>
         </div>
         
-        <header class="sidebar-header">
-            <div class="logo">
-                <i class="ph-fill ph-map-pin-line"></i>
-                <h1>MyFamalicão</h1>
-            </div>
-            <p>Descobre, cria e explora rotas em Vila Nova de Famalicão.</p>
-        </header>
+
 
         <!-- Perfil de Utilizador e Logout -->
         <div class="user-profile">
@@ -187,7 +184,6 @@ $userLang = $_SESSION["language"] ?? 'pt';
                     <i class="ph-bold ph-user-circle"></i>
                 </div>
                 <div>
-                    <span style="font-size: 11px; color: var(--text-muted); display: block; line-height: 1;">Autenticado como</span>
                     <span class="user-name"><?php echo htmlspecialchars($_SESSION["username"]); ?></span>
                 </div>
             </div>
@@ -257,6 +253,12 @@ $userLang = $_SESSION["language"] ?? 'pt';
     <!-- Botão de Localização Flutuante -->
     <button class="btn-location" onclick="locateUser()" title="A minha localização">
         <i class="ph-bold ph-crosshair"></i>
+    </button>
+
+    <!-- Botão para Reabrir Rotas (Mobile) -->
+    <button id="btn-reopen-routes" class="btn-routes-toggle" title="Abrir Roteiro">
+        <i class="ph-bold ph-list-bullets"></i>
+        <span>Roteiro</span>
     </button>
 
     <!-- Modal de Ajuda -->

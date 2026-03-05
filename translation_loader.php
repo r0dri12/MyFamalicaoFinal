@@ -18,7 +18,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     background: rgba(248, 250, 252, 0.98);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -26,6 +26,7 @@
     align-items: center;
     justify-content: center;
     z-index: 99999;
+    transform: none !important;
     transition: opacity 0.5s ease, visibility 0.5s;
 }
 

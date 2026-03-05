@@ -27,6 +27,104 @@ L.control.zoom({
 // Array para guardar os pontos da rota selecionados
 let currentRoute = [];
 
+// Lógica de Bottom Sheet deslizante para Mobile
+document.addEventListener('DOMContentLoaded', function () {
+    const sidebar = document.getElementById('sidebar');
+    const handle = document.querySelector('.mobile-handle');
+    const header = document.querySelector('.sidebar-header');
+    const btnReopen = document.getElementById('btn-reopen-routes');
+
+    if (!sidebar) return;
+
+    let isDragging = false;
+    let autoHideTimer = null;
+
+    function setSidebarHeight(height) {
+        sidebar.style.height = `${height}px`;
+    }
+
+    window.sideSnap = function (state) {
+        // Limpar timer se houver interação manual
+        if (autoHideTimer) {
+            clearTimeout(autoHideTimer);
+            autoHideTimer = null;
+        }
+
+        // state: 'expanded' ou 'hidden'
+        sidebar.classList.remove('dragging', 'expanded', 'hidden');
+        sidebar.style.height = '';
+
+        if (state === 'expanded') {
+            sidebar.classList.add('expanded');
+            if (btnReopen) btnReopen.classList.remove('visible');
+            setTimeout(() => map.invalidateSize(), 400);
+        } else if (state === 'hidden') {
+            sidebar.classList.add('hidden');
+            if (btnReopen) btnReopen.classList.add('visible');
+            setTimeout(() => map.invalidateSize(), 400);
+        }
+    }
+
+    // Eventos de toque para arrastar
+    const onTouchStart = (e) => {
+        if (window.innerWidth > 768) return;
+
+        if (autoHideTimer) {
+            clearTimeout(autoHideTimer);
+            autoHideTimer = null;
+        }
+
+        startY = e.touches[0].clientY;
+        startHeight = sidebar.offsetHeight;
+        isDragging = true;
+        sidebar.classList.add('dragging');
+        sidebar.classList.remove('hidden'); // Tirar do hidden se começar a arrastar
+    };
+
+    const onTouchMove = (e) => {
+        if (!isDragging) return;
+        const currentY = e.touches[0].clientY;
+        const deltaY = startY - currentY;
+        let newHeight = startHeight + deltaY;
+
+        // Limites de segurança
+        if (newHeight < 0) newHeight = 0;
+        if (newHeight > window.innerHeight * 0.9) newHeight = window.innerHeight * 0.9;
+
+        setSidebarHeight(newHeight);
+    };
+
+    const onTouchEnd = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        const currentHeight = sidebar.offsetHeight;
+
+        // Decidir snap binário (Expandido ou Escondido)
+        // Se estiver acima de 25% da tela, expande. Senão, esconde.
+        if (currentHeight > window.innerHeight * 0.25) {
+            window.sideSnap('expanded');
+        } else {
+            window.sideSnap('hidden');
+        }
+    };
+
+    // Aplicar a handle e header apenas em mobile
+    [handle, header].forEach(el => {
+        if (el) {
+            el.addEventListener('touchstart', onTouchStart, { passive: true });
+            el.addEventListener('touchmove', onTouchMove, { passive: true });
+            el.addEventListener('touchend', onTouchEnd);
+        }
+    });
+
+    // Botão de reabrir
+    if (btnReopen) {
+        btnReopen.addEventListener('click', () => {
+            window.sideSnap('expanded');
+        });
+    }
+});
+
 // Dados fictícios de Pontos de Interesse (POIs) baseado no teu projeto
 const pois = [
     {
@@ -232,6 +330,35 @@ window.addToRoute = function (id) {
     currentRoute.push(poi);
     updateRouteUI();
     map.closePopup();
+
+    // Feedback Mobile: Auto-expandir sidebar e depois auto-hide
+    if (window.innerWidth <= 768) {
+        if (typeof window.sideSnap === 'function') {
+            window.sideSnap('expanded');
+
+            // Scroll suave para o fim da lista
+            setTimeout(() => {
+                const routeList = document.getElementById('route-list');
+                if (routeList) routeList.scrollTop = routeList.scrollHeight;
+            }, 400);
+
+            // AUTO-HIDE após 3 segundos
+            // Definimos um timer global para podermos cancelar se o user interagir
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                // Removemos timers antigos se existirem
+                // (Já tratado dentro do window.sideSnap e onTouchStart, mas reforçamos aqui)
+
+                // Agendar o fecho automático
+                autoHideTimer = setTimeout(() => {
+                    // Só esconde se ainda estiver expandido e se não houve interação manual intermédia
+                    if (sidebar.classList.contains('expanded')) {
+                        window.sideSnap('hidden');
+                    }
+                }, 1500);
+            }
+        }
+    }
 };
 
 // Função para remover um ponto da rota
@@ -257,9 +384,10 @@ btnClear.addEventListener('click', async () => {
 
 // Atualizar interface visual da lista de rotas
 function updateRouteUI() {
-    routeCount.textContent = `${currentRoute.length} locais`;
+    const total = currentRoute.length;
+    routeCount.textContent = `${total} locais`;
 
-    if (currentRoute.length === 0) {
+    if (total === 0) {
         routeList.innerHTML = `
             <li class="empty-state">
                 <i class="ph-fill ph-map-trifold"></i>
