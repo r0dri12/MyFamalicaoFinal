@@ -49,9 +49,16 @@ endif; ?>
             <div class="nav-actions">
                 <div class="nav-auth">
                     <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
-                        <a href="settings" class="user-greeting" style="font-weight: 600; color: var(--text-main);"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($_SESSION["username"]); ?></a>
-                        <a href="map" class="btn btn-primary-sm">Abrir Mapa</a>
-                        <a href="logout" class="btn btn-danger-sm"><i class="ph-bold ph-sign-out"></i></a>
+                        <a href="settings" class="user-greeting" style="font-weight: 600; color: var(--text-main);">
+                            <i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> 
+                            <span class="greeting-name"><?php echo htmlspecialchars($_SESSION["username"]); ?></span>
+                        </a>
+                        <a href="map" class="btn btn-primary-sm">
+                            <i class="ph-bold ph-map-trifold"></i> <span class="greeting-name">Abrir Mapa</span>
+                        </a>
+                        <a href="logout" class="btn btn-danger-sm">
+                            <i class="ph-bold ph-sign-out"></i>
+                        </a>
                     <?php
 else: ?>
                         <a href="login" class="btn btn-outline">Entrar</a>

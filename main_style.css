@@ -428,23 +428,30 @@ footer {
         flex-shrink: 0;
     }
 
-    .nav-auth {
-        gap: 4px;
+    .greeting-name {
+        display: none;
     }
 
     .user-greeting {
-        font-size: 12px;
+        padding: 8px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        color: var(--primary) !important;
         display: flex;
         align-items: center;
-        gap: 4px;
+        justify-content: center;
+    }
+
+    .nav-auth {
+        gap: 8px;
     }
 
     .btn-primary-sm,
     .btn-outline,
     .btn-danger-sm {
-        padding: 6px 10px;
-        font-size: 12px;
-        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 13px;
+        border-radius: 10px;
     }
 
     .features {
@@ -461,6 +468,22 @@ footer {
 
     .settings-container {
         grid-template-columns: 1fr;
-        margin: 20px auto;
+        gap: 24px;
+        padding: 20px 16px 80px;
     }
+
+    .settings-sidebar {
+        position: static !important;
+        width: 100% !important;
+        border-radius: 16px;
+        box-shadow: none;
+    }
+
+    .settings-panel {
+        padding: 20px !important;
+    }
+}
+
+.navbar {
+    z-index: 1000 !important;
 }

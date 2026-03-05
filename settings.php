@@ -70,7 +70,15 @@ else {
         }
 
         @media (max-width: 768px) {
-            .settings-container { grid-template-columns: 1fr; }
+            .settings-container { 
+                grid-template-columns: 1fr; 
+                gap: 20px;
+                padding: 10px 16px 80px;
+            }
+            .settings-sidebar { 
+                position: relative !important;
+                top: 0 !important;
+            }
         }
 
         .settings-sidebar {
@@ -308,14 +316,19 @@ else {
                 <a href="comunidade">Comunidade</a>
                 <a href="meus_locais">Meus Locais</a>
             </div>
-
             <div class="nav-actions">
-                <div class="nav-auth" style="display: flex; gap: 12px; align-items: center;">
-                    <a href="settings" class="user-greeting" style="font-weight: 600;"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($user['username']); ?></a>
-                    <a href="map" class="btn btn-primary-sm">Abrir Mapa</a>
-                    <a href="logout" class="btn btn-danger-sm" title="Sair"><i class="ph-bold ph-sign-out"></i></a>
+                <div class="nav-auth" style="display: flex; gap: 8px; align-items: center;">
+                    <a href="settings" class="user-greeting" style="font-weight: 600;">
+                        <i class="ph-bold ph-user-circle" style="font-size: 20px; vertical-align: middle;"></i>
+                        <span class="greeting-name"><?php echo htmlspecialchars($user['username']); ?></span>
+                    </a>
+                    <a href="map" class="btn btn-primary-sm" title="Mapa">
+                        <i class="ph-bold ph-map-trifold"></i> <span class="greeting-name">Mapa</span>
+                    </a>
+                    <a href="logout" class="btn btn-danger-sm" title="Sair">
+                        <i class="ph-bold ph-sign-out"></i>
+                    </a>
                 </div>
-
             </div>
         </div>
     </nav>

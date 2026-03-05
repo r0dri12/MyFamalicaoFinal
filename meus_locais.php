@@ -371,8 +371,13 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="nav-actions">
                 <div class="nav-auth" style="display: flex; gap: 12px; align-items: center;">
-                    <a href="settings" class="user-greeting" style="font-weight: 600;"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($username); ?></a>
-                    <a href="map" class="btn btn-primary-sm">Abrir Mapa</a>
+                    <a href="settings" class="user-greeting" style="font-weight: 600;">
+                        <i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> 
+                        <span class="greeting-name"><?php echo htmlspecialchars($username); ?></span>
+                    </a>
+                    <a href="map" class="btn btn-primary-sm">
+                        <i class="ph-bold ph-map-trifold"></i> <span class="greeting-name">Abrir Mapa</span>
+                    </a>
                     <a href="logout" class="btn btn-danger-sm" title="Sair"><i class="ph-bold ph-sign-out"></i></a>
                 </div>
 
