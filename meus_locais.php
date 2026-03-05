@@ -360,18 +360,22 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <i class="ph-fill ph-map-pin-line"></i>
                 <span>MyFamalicão</span>
             </a>
+
             <div class="nav-links">
                 <a href="index">Início</a>
                 <a href="sobre">Sobre a PAP</a>
                 <a href="destaques">Destaques</a>
                 <a href="comunidade">Comunidade</a>
-                <a href="map">Mapa</a>
                 <a href="meus_locais" class="active">Meus Locais</a>
             </div>
-            <div class="nav-auth" style="display: flex; gap: 12px; align-items: center;">
-                <a href="settings" class="user-greeting" style="font-weight: 600;"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($username); ?></a>
-                <a href="map" class="btn btn-primary-sm">Mapa</a>
-                <a href="logout" class="btn btn-danger-sm" title="Sair"><i class="ph-bold ph-sign-out"></i></a>
+
+            <div class="nav-actions">
+                <div class="nav-auth" style="display: flex; gap: 12px; align-items: center;">
+                    <a href="settings" class="user-greeting" style="font-weight: 600;"><i class="ph-bold ph-user-circle" style="font-size: 18px; vertical-align: middle;"></i> <?php echo htmlspecialchars($username); ?></a>
+                    <a href="map" class="btn btn-primary-sm">Abrir Mapa</a>
+                    <a href="logout" class="btn btn-danger-sm" title="Sair"><i class="ph-bold ph-sign-out"></i></a>
+                </div>
+
             </div>
         </div>
     </nav>
