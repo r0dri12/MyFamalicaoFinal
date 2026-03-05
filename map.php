@@ -218,6 +218,9 @@ $userLang = $_SESSION["language"] ?? 'pt';
             <div class="route-header">
                 <h2>O teu Roteiro</h2>
                 <span id="route-count" class="badge">0 locais</span>
+                <button class="btn-icon" id="btn-history" title="Histórico de Rotas" onclick="openHistoryModal()" style="background:var(--primary); color:white; width:30px; height:30px; border-radius:8px;">
+                    <i class="ph-bold ph-clock-counter-clockwise"></i>
+                </button>
             </div>
             
             <ul id="route-list" class="route-list">
@@ -231,6 +234,10 @@ $userLang = $_SESSION["language"] ?? 'pt';
                 <button id="btn-export-google" class="btn btn-primary" disabled>
                     <i class="ph-bold ph-google-logo"></i>
                     Abrir no Google Maps
+                </button>
+                <button id="btn-save-route" class="btn btn-success" disabled onclick="openSaveRouteModal()" style="background:#10b981; color:white;">
+                    <i class="ph-bold ph-floppy-disk"></i>
+                    Guardar Rota
                 </button>
                 <div class="btn-group">
                     <button id="btn-audio-main" class="btn btn-secondary" onclick="playFullRouteAudio()">
@@ -314,6 +321,35 @@ $userLang = $_SESSION["language"] ?? 'pt';
             <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="document.getElementById('helpModal').style.display='none'">
                 Entendido, vamos lá explorar!
             </button>
+        </div>
+    </div>
+
+    <!-- Modal para Guardar Rota -->
+    <div id="saveRouteModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <button class="modal-close" onclick="document.getElementById('saveRouteModal').style.display='none'">
+                <i class="ph-bold ph-x"></i>
+            </button>
+            <h2 style="margin-bottom: 20px; color: var(--primary);"><i class="ph-fill ph-floppy-disk"></i> Guardar Rota</h2>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display:block; margin-bottom:8px; font-weight:600; font-size:14px;">Nome do Roteiro</label>
+                <input type="text" id="route-name-input" placeholder="Ex: Passeio de Domingo" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-family:inherit;">
+            </div>
+            <button class="btn btn-primary" onclick="confirmSaveRoute()" style="width:100%; background:#10b981;">Guardar Roteiro</button>
+        </div>
+    </div>
+
+    <!-- Modal de Histórico de Rotas -->
+    <div id="historyModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" onclick="document.getElementById('historyModal').style.display='none'">
+                <i class="ph-bold ph-x"></i>
+            </button>
+            <h2 style="margin-bottom: 20px; color: var(--primary);"><i class="ph-fill ph-clock-counter-clockwise"></i> Minhas Rotas</h2>
+            <div id="history-list" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;">
+                <!-- Carregado via JS -->
+                <p style="text-align:center; color:var(--text-muted);">A carregar histórico...</p>
+            </div>
         </div>
     </div>
 

@@ -396,11 +396,15 @@ function updateRouteUI() {
         `;
         btnExportGoogle.disabled = true;
         btnClear.disabled = true;
+        const btnSave = document.getElementById('btn-save-route');
+        if (btnSave) btnSave.disabled = true;
         return;
     }
 
     btnExportGoogle.disabled = false;
     btnClear.disabled = false;
+    const btnSave = document.getElementById('btn-save-route');
+    if (btnSave) btnSave.disabled = false;
 
     routeList.innerHTML = '';
 
@@ -663,3 +667,117 @@ function updateAudioButtonUI(active) {
         btnAudio.classList.remove('pulse-animation');
     }
 }
+
+// =========================================
+// ROUTE HISTORY LOGIC
+// =========================================
+
+window.openSaveRouteModal = function () {
+    document.getElementById('route-name-input').value = '';
+    document.getElementById('saveRouteModal').style.display = 'flex';
+};
+
+window.confirmSaveRoute = function () {
+    const name = document.getElementById('route-name-input').value.trim();
+    if (!name) {
+        myFama.toast("Dá um nome à tua rota!", "warning");
+        return;
+    }
+
+    const payload = {
+        name: name,
+        items: currentRoute.map(p => String(p.id))
+    };
+
+    fetch('api_routes.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                myFama.toast(data.message, "success");
+                document.getElementById('saveRouteModal').style.display = 'none';
+            } else {
+                myFama.alert("Erro ao Guardar", data.message, "error");
+            }
+        })
+        .catch(err => console.error("Erro ao guardar rota:", err));
+};
+
+window.openHistoryModal = function () {
+    document.getElementById('historyModal').style.display = 'flex';
+    loadHistory();
+};
+
+function loadHistory() {
+    const list = document.getElementById('history-list');
+    list.innerHTML = '<p style="text-align:center; color:var(--text-muted);">A carregar histórico...</p>';
+
+    fetch('api_routes.php')
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                if (data.routes.length === 0) {
+                    list.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">Ainda não guardaste nenhuma rota.</p>';
+                    return;
+                }
+
+                list.innerHTML = data.routes.map(route => `
+                <div style="background:#f8fafc; border:1px solid var(--border); border-radius:12px; padding:16px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h4 style="font-size:15px; font-weight:700; margin-bottom:4px;">${route.route_name}</h4>
+                        <p style="font-size:12px; color:var(--text-muted);">${new Date(route.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="loadRouteFromHistory(${route.id})" style="background:var(--primary); color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;">Carregar</button>
+                        <button onclick="deleteRoute(${route.id})" style="background:#fee2e2; color:var(--danger); border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="ph-bold ph-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            }
+        });
+}
+
+window.loadRouteFromHistory = function (id) {
+    fetch(`api_routes.php?id=${id}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Re-populate currentRoute from list of IDs
+                const newRoute = [];
+                data.items.forEach(poiId => {
+                    const poi = pois.find(p => String(p.id) === String(poiId));
+                    if (poi) newRoute.push(poi);
+                });
+
+                if (newRoute.length > 0) {
+                    currentRoute = newRoute;
+                    updateRouteUI();
+                    document.getElementById('historyModal').style.display = 'none';
+                    myFama.toast("Rota carregada com sucesso!", "success");
+                } else {
+                    myFama.alert("Erro", "Alguns locais nesta rota já não estão disponíveis.", "warning");
+                }
+            }
+        });
+};
+
+window.deleteRoute = async function (id) {
+    const confirmed = await myFama.confirm("Eliminar Rota", "Tens a certeza que queres eliminar este roteiro guardado?");
+    if (confirmed) {
+        fetch('api_routes.php', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    myFama.toast(data.message, "info");
+                    loadHistory();
+                }
+            });
+    }
+};
