@@ -10,7 +10,13 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 }
 
 $user_id = $_SESSION["id"];
-$data = json_decode(file_get_contents("php://input"));
+$json_input = file_get_contents("php://input");
+$data = json_decode($json_input);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $json_input && !$data) {
+    echo json_encode(["status" => "error", "message" => "JSON inválido"]);
+    exit;
+}
 
 try {
     // GET: Listar todos os pontos públicos com estatísticas sociais

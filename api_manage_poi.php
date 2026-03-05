@@ -75,11 +75,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
 
-            $sql = "UPDATE custom_pois SET name = :name, description = :description, type = :type {$image_query_part} WHERE id = :id AND user_id = :user_id";
+            $is_public = isset($_POST['is_public']) ? (int)$_POST['is_public'] : 0;
+
+            $sql = "UPDATE custom_pois SET name = :name, description = :description, type = :type, is_public = :is_public {$image_query_part} WHERE id = :id AND user_id = :user_id";
             if ($stmt = $conn->prepare($sql)) {
                 $stmt->bindParam(":name", $name, PDO::PARAM_STR);
                 $stmt->bindParam(":description", $desc, PDO::PARAM_STR);
                 $stmt->bindParam(":type", $type, PDO::PARAM_STR);
+                $stmt->bindParam(":is_public", $is_public, PDO::PARAM_INT);
                 $stmt->bindParam(":id", $poi_id, PDO::PARAM_INT);
                 $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
 

@@ -290,6 +290,8 @@ body {
     background: white;
     width: 100%;
     max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
     border-radius: 20px;
     padding: 32px;
     position: relative;

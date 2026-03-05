@@ -19,7 +19,7 @@ if (!empty($search)) {
 }
 
 // Get user's POIs
-$sql = "SELECT id, name, description, latitude, longitude, type, image FROM custom_pois WHERE " . $where_clause . " ORDER BY id DESC";
+$sql = "SELECT id, name, description, latitude, longitude, type, image, is_public FROM custom_pois WHERE " . $where_clause . " ORDER BY id DESC";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
 if (!empty($search)) {
@@ -486,6 +486,16 @@ endif; ?>
                         <label>Descrição</label>
                         <textarea class="form-control" id="editDesc" rows="3"></textarea>
                     </div>
+
+                    <div class="form-group" style="margin-top: 24px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; font-size: 14px; user-select: none;">
+                            <input type="checkbox" id="editPublic" style="width: 20px; height: 20px; cursor: pointer;">
+                            Tornar público para a comunidade
+                        </label>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px; margin-left: 30px;">
+                            Ao ativar, este local ficará visível para todos os utilizadores na página da Comunidade.
+                        </p>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -510,6 +520,9 @@ endif; ?>
             const typeSelect = document.getElementById('editType');
             let typeExists = Array.from(typeSelect.options).some(opt => opt.value === poi.type);
             typeSelect.value = typeExists ? poi.type : 'Outro';
+
+            // Set Public status
+            document.getElementById('editPublic').checked = (poi.is_public == 1);
 
             // Set Image
             const imgPreview = document.getElementById('editImagePreview');
@@ -555,6 +568,7 @@ endif; ?>
             const name = document.getElementById('editName').value;
             const type = document.getElementById('editType').value;
             const desc = document.getElementById('editDesc').value;
+            const isPublic = document.getElementById('editPublic').checked ? 1 : 0;
             const fileInput = document.getElementById('editImageInput');
 
         if(!name.trim()) { 
@@ -568,6 +582,7 @@ endif; ?>
             formData.append('name', name);
             formData.append('type', type);
             formData.append('description', desc);
+            formData.append('is_public', isPublic);
             
             if(fileInput.files.length > 0) {
                 formData.append('image', fileInput.files[0]);

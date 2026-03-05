@@ -290,6 +290,26 @@ $userLang = $_SESSION["language"] ?? 'pt';
                 <h3>🚗 Exportar para o GPS</h3>
                 <p>Quando tiveres a tua rota construída no painel (com os locais que escolheste), clica em <strong>"Abrir no Google Maps"</strong>. O sistema vai gerar automaticamente um itinerário no GPS com a ordem que escolheste!</p>
             </div>
+
+            <div class="help-section">
+                <h3>🔊 Áudio-Guia</h3>
+                <p>Podes ouvir a descrição de qualquer local clicando no ícone de <strong>altifalante</strong>. No painel lateral, podes também ativar o áudio-guia para todo o teu roteiro!</p>
+            </div>
+
+            <div class="help-section">
+                <h3>🌍 Mudar Idioma</h3>
+                <p>Usa os botões de bandeira no painel lateral para traduzir instantaneamente todo o mapa e descrições para o teu idioma preferido.</p>
+            </div>
+
+            <div class="help-section">
+                <h3>📍 Minha Localização</h3>
+                <p>Clica no botão de <strong>mira</strong> no canto inferior direito para centrares o mapa na tua posição atual em tempo real.</p>
+            </div>
+
+            <div class="help-section">
+                <h3>👥 Comunidade</h3>
+                <p>Ao criares um local, podes marcar a opção <strong>"Tornar público"</strong> para que outros exploradores o vejam na página da Comunidade!</p>
+            </div>
             
             <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="document.getElementById('helpModal').style.display='none'">
                 Entendido, vamos lá explorar!
