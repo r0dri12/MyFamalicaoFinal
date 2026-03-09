@@ -64,6 +64,7 @@ $userLang = $_SESSION["language"] ?? 'pt';
         .user-name {
             font-weight: 600;
             font-size: 14px;
+            color: var(--text-main);
         }
         .btn-logout {
             color: var(--danger);
@@ -79,7 +80,7 @@ $userLang = $_SESSION["language"] ?? 'pt';
             transition: background 0.2s;
         }
         .btn-logout:hover {
-            background: #fee2e2;
+            background: var(--border);
         }
 
         /* Language Selector Styling */
@@ -89,15 +90,15 @@ $userLang = $_SESSION["language"] ?? 'pt';
             gap: 8px;
             margin-bottom: 24px;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.5);
+            background: var(--secondary);
             border-radius: 12px;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
         }
         .lang-btn {
             width: 100%;
             padding: 8px 4px;
-            border: 1px solid #e2e8f0;
-            background: white;
+            border: 1px solid var(--border);
+            background: var(--surface);
             border-radius: 8px;
             cursor: pointer;
             display: flex;
@@ -106,6 +107,7 @@ $userLang = $_SESSION["language"] ?? 'pt';
             gap: 4px;
             transition: all 0.2s;
             font-family: 'Inter', sans-serif;
+            color: var(--text-main);
         }
         .lang-btn img {
             width: 20px;
@@ -121,7 +123,7 @@ $userLang = $_SESSION["language"] ?? 'pt';
         }
         .lang-btn:hover {
             border-color: var(--primary);
-            background: var(--primary-light, #f0f7ff);
+            background: var(--secondary);
         }
         .lang-btn.active {
             border-color: var(--primary);

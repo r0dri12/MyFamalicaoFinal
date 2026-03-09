@@ -20,14 +20,22 @@
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
     --border: #334155;
-    --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     --icon-bg: #1e293b;
     --item-bg: #1e293b;
+    --input-bg: #1e293b;
+    --secondary: #334155;
+    --scrollbar-thumb: #475569;
+    --scrollbar-track: #1e293b;
 }
 
 :root {
     --icon-bg: #eff6ff;
     --item-bg: #ffffff;
+    --input-bg: #ffffff;
+    --secondary: #f1f5f9;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-track: #f8fafc;
 }
 
 * {
@@ -201,12 +209,27 @@ body {
 }
 
 /* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 10px;
+    border: 2px solid var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
 .route-list::-webkit-scrollbar {
     width: 6px;
 }
 
 .route-list::-webkit-scrollbar-thumb {
-    background-color: #cbd5e1;
+    background-color: var(--scrollbar-thumb);
     border-radius: 10px;
 }
 
@@ -237,7 +260,7 @@ body {
     position: fixed;
     top: 24px;
     right: 24px;
-    background: white;
+    background: var(--item-bg);
     color: var(--text-main);
     border: 1px solid var(--border);
     padding: 10px 20px;
@@ -269,7 +292,7 @@ body {
     position: fixed;
     top: 80px;
     right: 24px;
-    background: white;
+    background: var(--item-bg);
     color: var(--text-main);
     border: 1px solid var(--border);
     width: 44px;
@@ -354,7 +377,7 @@ body {
 
 .modal-close:hover {
     color: var(--danger);
-    background: #f1f5f9;
+    background: var(--secondary);
 }
 
 .help-section {
@@ -565,13 +588,13 @@ body {
 }
 
 .btn-secondary {
-    background-color: #f1f5f9;
+    background-color: var(--secondary);
     color: var(--text-main);
     flex: 1;
 }
 
 .btn-secondary:hover {
-    background-color: #e2e8f0;
+    background-color: var(--border);
 }
 
 .btn-danger {
@@ -617,20 +640,39 @@ body {
     margin-bottom: 12px;
 }
 
-.add-poi-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    transition: background 0.2s;
-}
-
 .add-poi-btn:hover {
     background: var(--primary-hover);
+}
+
+/* =========================================
+   LEAFLET DARK MODE REFINEMENTS
+   ========================================= */
+[data-theme="dark"] .leaflet-popup-content-wrapper,
+[data-theme="dark"] .leaflet-popup-tip {
+    background: var(--surface);
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .leaflet-bar a {
+    background-color: var(--surface);
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border);
+}
+
+[data-theme="dark"] .leaflet-bar a:hover {
+    background-color: var(--secondary);
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background-color: var(--input-bg);
+    color: var(--text-main);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .btn-secondary {
+    background-color: var(--secondary);
 }
 
 /* Responsividade Mapa */

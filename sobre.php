@@ -40,7 +40,7 @@ session_start();
             margin-bottom: 60px;
         }
         .about-card {
-            background: white;
+            background: var(--surface);
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);

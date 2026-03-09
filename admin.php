@@ -48,14 +48,14 @@ if (!$user || $user['is_admin'] != 1) {
         .admin-header h1 {
             font-size: 32px;
             font-weight: 800;
-            color: #0f172a;
+            color: var(--text-main);
         }
 
         .admin-tabs {
             display: flex;
             gap: 12px;
             margin-bottom: 30px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border);
             padding-bottom: 2px;
         }
 
@@ -65,17 +65,17 @@ if (!$user || $user['is_admin'] != 1) {
             background: none;
             font-size: 15px;
             font-weight: 600;
-            color: #64748b;
+            color: var(--text-muted);
             cursor: pointer;
             border-radius: 12px 12px 0 0;
             transition: all 0.2s;
             position: relative;
         }
 
-        .tab-btn:hover { color: #0f172a; background: #f8fafc; }
+        .tab-btn:hover { color: var(--text-main); background: var(--secondary); }
 
         .tab-btn.active {
-            color: #3b82f6;
+            color: var(--primary);
         }
 
         .tab-btn.active::after {
@@ -85,15 +85,15 @@ if (!$user || $user['is_admin'] != 1) {
             left: 0;
             width: 100%;
             height: 2px;
-            background: #3b82f6;
+            background: var(--primary);
         }
 
         .admin-card {
-            background: white;
+            background: var(--surface);
             border-radius: 20px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
 
         .admin-table {
@@ -104,23 +104,23 @@ if (!$user || $user['is_admin'] != 1) {
 
         .admin-table th {
             padding: 16px 24px;
-            background: #f8fafc;
+            background: var(--background);
             font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
-            color: #64748b;
+            color: var(--text-muted);
             letter-spacing: 0.5px;
         }
 
         .admin-table td {
             padding: 16px 24px;
-            border-top: 1px solid #f1f5f9;
+            border-top: 1px solid var(--border);
             font-size: 14px;
-            color: #334155;
+            color: var(--text-main);
             vertical-align: middle;
         }
 
-        .admin-table tr:hover td { background: #fcfdfe; }
+        .admin-table tr:hover td { background: var(--background); }
 
         .status-badge {
             padding: 4px 10px;
@@ -130,8 +130,8 @@ if (!$user || $user['is_admin'] != 1) {
             text-transform: uppercase;
         }
 
-        .badge-admin { background: #eff6ff; color: #3b82f6; }
-        .badge-user { background: #f1f5f9; color: #64748b; }
+        .badge-admin { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .badge-user { background: var(--border); color: var(--text-muted); }
 
         .actions-cell {
             display: flex;
@@ -154,8 +154,8 @@ if (!$user || $user['is_admin'] != 1) {
         .btn-delete { background: #fee2e2; color: #ef4444; }
         .btn-delete:hover { background: #ef4444; color: white; }
 
-        .btn-toggle { background: #f1f5f9; color: #475569; }
-        .btn-toggle:hover { background: #3b82f6; color: white; }
+        .btn-toggle { background: var(--secondary); color: var(--text-muted); }
+        .btn-toggle:hover { background: var(--primary); color: white; }
 
         #admin-content {
             animation: fadeIn 0.4s ease-out;

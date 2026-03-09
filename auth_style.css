@@ -2,11 +2,22 @@
     --primary: #3b82f6;
     --primary-hover: #2563eb;
     --background: #f8fafc;
+    --surface: #ffffff;
     --text-main: #0f172a;
     --text-muted: #64748b;
     --border: #e2e8f0;
     --danger: #ef4444;
 }
+
+[data-theme="dark"] {
+    --background: #0f172a;
+    --surface: #1e293b;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --input-bg: #0f172a;
+}
+
 
 * {
     box-sizing: border-box;
@@ -32,10 +43,10 @@ body {
 }
 
 .auth-container {
-    background: white;
+    background: var(--surface);
     padding: 40px 30px;
     border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--border);
     text-align: center;
 }
@@ -105,13 +116,14 @@ body {
     font-size: 14px;
     font-family: 'Inter', sans-serif;
     transition: all 0.2s;
-    background: #f8fafc;
+    background: var(--background);
+    color: var(--text-main);
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--primary);
-    background: white;
+    background: var(--surface);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -153,12 +165,12 @@ body {
 }
 
 .btn-secondary {
-    background-color: #f1f5f9;
+    background-color: var(--border);
     color: var(--text-main);
 }
 
 .btn-secondary:hover {
-    background-color: #e2e8f0;
+    background-color: var(--text-muted);
 }
 
 .auth-link {

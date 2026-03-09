@@ -40,7 +40,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         .community-header h1 {
             font-size: 32px;
             font-weight: 800;
-            color: #0f172a;
+            color: var(--text-main);
             margin-bottom: 8px;
         }
 
@@ -51,10 +51,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         }
 
         .poi-card {
-            background: white;
+            background: var(--surface);
             border-radius: 20px;
             overflow: hidden;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
             flex-direction: column;
@@ -62,7 +62,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
         .poi-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.4);
         }
 
         .poi-image {
@@ -76,14 +76,14 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             position: absolute;
             top: 12px;
             left: 12px;
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--surface);
             backdrop-filter: blur(4px);
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            color: #3b82f6;
+            color: var(--primary);
         }
 
         .poi-content {
@@ -93,7 +93,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
         .poi-owner {
             font-size: 12px;
-            color: #64748b;
+            color: var(--text-muted);
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -103,13 +103,13 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         .poi-content h3 {
             font-size: 18px;
             font-weight: 700;
-            color: #0f172a;
+            color: var(--text-main);
             margin-bottom: 8px;
         }
 
         .poi-content p {
             font-size: 14px;
-            color: #64748b;
+            color: var(--text-muted);
             line-height: 1.5;
             margin-bottom: 20px;
         }
@@ -118,8 +118,8 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             display: flex;
             gap: 16px;
             padding: 16px 20px;
-            border-top: 1px solid #f1f5f9;
-            background: #f8fafc;
+            border-top: 1px solid var(--border);
+            background: var(--background);
         }
 
         .action-btn {
@@ -130,20 +130,20 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             gap: 6px;
             font-size: 14px;
             font-weight: 600;
-            color: #64748b;
+            color: var(--text-muted);
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .action-btn:hover { color: #3b82f6; }
+        .action-btn:hover { color: var(--primary); }
         .action-btn.liked { color: #ef4444; }
         .action-btn.liked i { font-variation-settings: 'FILL' 1; }
 
         .comments-section {
             display: none;
-            border-top: 1px solid #f1f5f9;
+            border-top: 1px solid var(--border);
             padding: 20px;
-            background: #fff;
+            background: var(--surface);
         }
 
         .comment-item {
@@ -151,8 +151,8 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             font-size: 13px;
         }
 
-        .comment-user { font-weight: 700; color: #0f172a; margin-right: 4px; }
-        .comment-text { color: #475569; }
+        .comment-user { font-weight: 700; color: var(--text-main); margin-right: 4px; }
+        .comment-text { color: var(--text-muted); }
 
         .comment-form {
             display: flex;
@@ -163,13 +163,15 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         .comment-form input {
             flex: 1;
             padding: 8px 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 13px;
+            background: var(--background);
+            color: var(--text-main);
         }
 
         .comment-form button {
-            background: #3b82f6;
+            background: var(--primary);
             color: white;
             border: none;
             padding: 8px 12px;
@@ -191,7 +193,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             font-size: 15px;
             font-weight: 700;
             border: 1px solid var(--border);
-            background: white;
+            background: var(--surface);
             color: var(--text-muted);
             cursor: pointer;
             transition: all 0.3s;
@@ -214,9 +216,9 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         }
 
         .route-card {
-            background: white;
+            background: var(--surface);
             border-radius: 20px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             padding: 24px;
             display: flex;
             flex-direction: column;
@@ -224,11 +226,11 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             transition: all 0.3s;
         }
 
-        .route-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.05); }
+        .route-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.2); }
 
         .route-badge { 
-            background: #f1f5f9; 
-            color: #475569; 
+            background: var(--background); 
+            color: var(--text-muted); 
             padding: 4px 10px; 
             border-radius: 8px; 
             font-size: 11px; 

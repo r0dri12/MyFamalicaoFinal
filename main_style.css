@@ -23,8 +23,19 @@
     --navbar-bg: rgba(15, 23, 42, 0.9);
     --badge-soon-bg: #451a03;
     --badge-soon-text: #fbbf24;
-    --btn-secondary-bg: rgba(51, 65, 85, 0.8);
+    --btn-secondary-bg: #334155;
     --btn-danger-bg: #450a0a;
+    --input-bg: #0f172a;
+    --card-hover: #334155;
+    --scrollbar-thumb: #475569;
+    --scrollbar-track: #1e293b;
+}
+
+:root {
+    --input-bg: #ffffff;
+    --card-hover: #f1f5f9;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-track: #f8fafc;
 }
 
 * {
@@ -61,6 +72,22 @@ body {
 .route-card,
 .modal {
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 10px;
+    border: 2px solid var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
 }
 
 a {
@@ -277,10 +304,10 @@ a {
 }
 
 .btn-secondary:hover {
-    background: #f1f5f9;
+    background: var(--border);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border-color: #cbd5e1;
+    border-color: var(--text-muted);
 }
 
 .btn-outline {
@@ -608,4 +635,17 @@ footer {
     filter: drop-shadow(0 0 5px var(--primary));
     stroke-linecap: round;
     transition: all 0.5s ease;
+}
+
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .about-card,
+[data-theme="dark"] .poi-card,
+[data-theme="dark"] .gallery-item,
+[data-theme="dark"] .route-card,
+[data-theme="dark"] .settings-panel,
+[data-theme="dark"] .auth-container,
+[data-theme="dark"] .tab-btn {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text-main) !important;
 }

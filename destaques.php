@@ -43,12 +43,14 @@ session_start();
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            background: white;
+            background: var(--surface);
+            border: 1px solid var(--border);
             transition: transform 0.3s ease;
         }
         
         .gallery-item:hover {
             transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
         }
         
         .gallery-img {
@@ -75,6 +77,7 @@ session_start();
         .gallery-content h3 {
             font-size: 20px;
             font-weight: 700;
+            color: var(--text-main);
             margin-bottom: 8px;
         }
         
