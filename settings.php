@@ -17,6 +17,12 @@ $stmt->bindParam(":id", $user_id, PDO::PARAM_INT);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+if (!$user) {
+    session_destroy();
+    header("location: login");
+    exit;
+}
+
 // Update session language if it differs (sync)
 $_SESSION["language"] = $user['language'] ?? 'pt';
 
@@ -316,7 +322,8 @@ else {
                 <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
                 <a href="comunidade">Comunidade</a>
                 <a href="meus_locais">Meus Locais</a>
-                <?php endif; ?>
+                <?php
+endif; ?>
             </div>
             <div class="nav-actions">
                 <div class="nav-auth" style="display: flex; gap: 8px; align-items: center;">
@@ -329,7 +336,8 @@ else {
                     </a>
                     <?php if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"] == 1): ?>
                     <a href="admin" class="btn-admin-special" style="margin: 0 5px;">Admin</a>
-                    <?php endif; ?>
+                    <?php
+endif; ?>
                     <a href="logout" class="btn btn-danger-sm" title="Sair">
                         <i class="ph-bold ph-sign-out"></i>
                     </a>

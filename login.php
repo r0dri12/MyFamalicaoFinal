@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($username_err) && empty($password_err)) {
-        $sql = "SELECT id, username, password, language, is_admin FROM users WHERE username = :username";
+        $sql = "SELECT id, username, password, is_verified, language, is_admin FROM users WHERE username = :username";
 
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
@@ -40,15 +40,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $username = $row["username"];
                         $hashed_password = $row["password"];
                         if (password_verify($password, $hashed_password)) {
-                            session_start();
+                            if ($row["is_verified"] == 0) {
+                                header("location: verify?u=" . urlencode($username));
+                                exit;
+                            }
+                            else {
 
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;
-                            $_SESSION["language"] = $row["language"] ?? 'pt';
-                            $_SESSION["is_admin"] = $row["is_admin"] ?? 0;
+                                $_SESSION["loggedin"] = true;
+                                $_SESSION["id"] = $id;
+                                $_SESSION["username"] = $username;
+                                $_SESSION["language"] = $row["language"] ?? 'pt';
+                                $_SESSION["is_admin"] = $row["is_admin"] ?? 0;
 
-                            header("location: map");
+                                header("location: map");
+                                exit;
+                            }
                         }
                         else {
                             $login_err = "Nome de utilizador ou palavra-passe incorretos.";
@@ -121,6 +127,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
     <script src="ui_notifications.js"></script>
+    <?php if (isset($_GET['registered']) && $_GET['registered'] == 'true'): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            myFama.alert("Conta Criada", "Registo concluído! Por favor, verifica o teu email para validar a conta antes de entrares.", "success");
+        });
+    </script>
+    <?php
+endif; ?>
     <?php if (!empty($login_err)): ?>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

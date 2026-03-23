@@ -1,8 +1,8 @@
 <?php
 require_once "db_connect.php";
 
-$full_name = $username = $password = $confirm_password = $language = "";
-$full_name_err = $username_err = $password_err = $confirm_password_err = "";
+$full_name = $username = $password = $confirm_password = $language = $email = "";
+$full_name_err = $username_err = $password_err = $confirm_password_err = $email_err = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -12,6 +12,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     else {
         $full_name = trim($_POST["full_name"]);
+    }
+
+    // Email Validation
+    if (empty(trim($_POST["email"]))) {
+        $email_err = "Introduz o teu endereço de email.";
+    }
+    elseif (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
+        $email_err = "Introduz um endereço de email válido.";
+    }
+    else {
+        $sql = "SELECT id FROM users WHERE email = :email";
+        if ($stmt = $conn->prepare($sql)) {
+            $stmt->bindParam(":email", $param_email, PDO::PARAM_STR);
+            $param_email = trim($_POST["email"]);
+            if ($stmt->execute()) {
+                if ($stmt->rowCount() == 1) {
+                    $email_err = "Este email já está registado.";
+                }
+                else {
+                    $email = trim($_POST["email"]);
+                }
+            }
+            else {
+                echo "Ops! Algo deu errado com a verificação de email.";
+            }
+            unset($stmt);
+        }
     }
 
     // Username Validation
@@ -72,21 +99,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $language = trim($_POST["language"]);
     }
 
-    if (empty($full_name_err) && empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
-        $sql = "INSERT INTO users (full_name, username, password, language) VALUES (:full_name, :username, :password, :language)";
+    if (empty($full_name_err) && empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($email_err)) {
+        $sql = "INSERT INTO users (full_name, username, password, email, verification_code, is_verified, language) VALUES (:full_name, :username, :password, :email, :verification_code, 0, :language)";
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bindParam(":full_name", $param_full_name, PDO::PARAM_STR);
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
             $stmt->bindParam(":password", $param_password, PDO::PARAM_STR);
+            $stmt->bindParam(":email", $param_email, PDO::PARAM_STR);
+            $stmt->bindParam(":verification_code", $param_vcode, PDO::PARAM_STR);
             $stmt->bindParam(":language", $param_language, PDO::PARAM_STR);
 
             $param_full_name = $full_name;
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT);
+            $param_email = $email;
+            $param_vcode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             $param_language = $language;
 
             if ($stmt->execute()) {
-                header("location: login");
+                require_once "includes/mailer.php";
+                sendVerificationEmail($param_email, $param_vcode);
+
+                header("location: verify?u=" . urlencode($username));
+                exit;
             }
             else {
                 echo "Ops! Algo deu errado. Tenta mais tarde.";
@@ -140,6 +175,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="invalid-feedback"><?php echo $username_err; ?></span>
                 </div>    
                 <div class="form-group">
+                    <label>E-mail</label>
+                    <div class="input-wrapper <?php echo(!empty($email_err)) ? 'has-error' : ''; ?>">
+                        <i class="ph ph-envelope"></i>
+                        <input type="email" name="email" class="form-control" value="<?php echo $email; ?>" placeholder="O teu email...">
+                    </div>
+                    <span class="invalid-feedback"><?php echo $email_err; ?></span>
+                </div>
+                <div class="form-group">
                     <label>Palavra-passe</label>
                     <div class="input-wrapper <?php echo(!empty($password_err)) ? 'has-error' : ''; ?>">
                         <i class="ph ph-lock-key"></i>
@@ -181,6 +224,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $any_err = "";
 if (!empty($username_err))
     $any_err = $username_err;
+elseif (!empty($email_err))
+    $any_err = $email_err;
 elseif (!empty($password_err))
     $any_err = $password_err;
 elseif (!empty($confirm_password_err))
