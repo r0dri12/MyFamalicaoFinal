@@ -45,7 +45,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="ui_notifications.css">
     <style>
         .page-top {
-            background: white;
+            background: var(--surface);
             padding: 32px 24px;
             border-bottom: 1px solid var(--border);
             text-align: center;
@@ -54,6 +54,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             font-size: 28px;
             font-weight: 800;
             letter-spacing: -1px;
+            color: var(--text-main);
         }
         .container {
             max-width: 1200px;
@@ -90,7 +91,8 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 12px;
             font-family: inherit;
             font-size: 14px;
-            background: white;
+            background: var(--background);
+            color: var(--text-main);
             transition: all 0.2s;
         }
         .search-input:focus {
@@ -107,7 +109,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .poi-card {
-            background: white;
+            background: var(--surface);
             border-radius: 16px;
             border: 1px solid var(--border);
             overflow: hidden;
@@ -117,13 +119,13 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         .poi-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
         }
 
         .poi-img-wrapper {
             position: relative;
             height: 180px;
-            background: #f1f5f9;
+            background: var(--background);
         }
         .poi-img {
             width: 100%;
@@ -134,7 +136,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             position: absolute;
             top: 12px;
             left: 12px;
-            background: rgba(255,255,255,0.9);
+            background: var(--surface);
             backdrop-filter: blur(4px);
             padding: 4px 10px;
             border-radius: 6px;
@@ -155,6 +157,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             font-weight: 700;
             margin-bottom: 8px;
             line-height: 1.3;
+            color: var(--text-main);
         }
         .poi-desc {
             color: var(--text-muted);
@@ -200,29 +203,30 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             transition: all 0.2s;
             font-size: 16px;
         }
-        .btn-edit { background: #eff6ff; color: var(--primary); }
+        .btn-edit { background: var(--secondary); color: var(--primary); }
         .btn-edit:hover { background: var(--primary); color: white; }
-        .btn-delete { background: #fef2f2; color: var(--danger); }
+        .btn-delete { background: var(--border); color: var(--danger); }
         .btn-delete:hover { background: var(--danger); color: white; }
 
         /* Empty State */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            background: white;
+            background: var(--surface);
             border-radius: 16px;
             border: 1px dashed var(--border);
             grid-column: 1 / -1;
         }
         .empty-state i {
             font-size: 48px;
-            color: var(--text-light);
+            color: var(--text-muted);
             margin-bottom: 16px;
         }
         .empty-state h3 {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 8px;
+            color: var(--text-main);
         }
         .empty-state p {
             color: var(--text-muted);
@@ -265,6 +269,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             display: flex; margin: 0;
             align-items: center;
             gap: 8px;
+            color: var(--text-main);
         }
         .modal-close {
             background: none;
@@ -275,7 +280,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 4px;
             border-radius: 6px;
         }
-        .modal-close:hover { background: #f1f5f9; color: var(--text-main); }
+        .modal-close:hover { background: var(--secondary); color: var(--text-main); }
         
         .modal-body {
             padding: 24px;
@@ -290,6 +295,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             font-size: 13px;
             font-weight: 600;
             margin-bottom: 8px;
+            color: var(--text-main);
         }
         .form-control {
             width: 100%;
@@ -298,13 +304,14 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 10px;
             font-family: inherit;
             font-size: 14px;
-            background: #f8fafc;
+            background: var(--background);
+            color: var(--text-main);
             transition: all 0.2s;
         }
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            background: white;
+            background: var(--surface);
             box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
         }
         textarea.form-control {
@@ -317,7 +324,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             height: 160px;
             border-radius: 10px;
             border: 1px dashed var(--border);
-            background: #f8fafc;
+            background: var(--background);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -346,7 +353,7 @@ $pois = $stmt->fetchAll(PDO::FETCH_ASSOC);
             display: flex;
             justify-content: flex-end;
             gap: 12px;
-            background: #f8fafc;
+            background: var(--background);
         }
     </style>
 </head>

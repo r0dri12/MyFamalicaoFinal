@@ -88,7 +88,7 @@ else {
         }
 
         .settings-sidebar {
-            background: white;
+            background: var(--surface);
             border-radius: 16px;
             padding: 24px;
             border: 1px solid var(--border);
@@ -157,6 +157,7 @@ else {
             font-size: 17px;
             font-weight: 700;
             margin-bottom: 4px;
+            color: var(--text-main);
         }
 
         .profile-summary p {
@@ -184,7 +185,7 @@ else {
         }
 
         .settings-nav a:hover, .settings-nav a.active {
-            background: #f8fafc;
+            background: var(--secondary);
             color: var(--primary);
         }
 
@@ -193,7 +194,7 @@ else {
         .settings-nav i { font-size: 20px; }
 
         .settings-panel {
-            background: white;
+            background: var(--surface);
             border-radius: 16px;
             padding: 32px;
             border: 1px solid var(--border);
@@ -209,6 +210,7 @@ else {
             margin-bottom: 24px;
             padding-bottom: 16px;
             border-bottom: 1px solid var(--border);
+            color: var(--text-main);
         }
 
         .section-title i { color: var(--primary); font-size: 22px; }
@@ -220,7 +222,7 @@ else {
         }
 
         .stat-card {
-            background: #f8fafc;
+            background: var(--background);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
@@ -250,6 +252,7 @@ else {
             font-size: 13px;
             font-weight: 600;
             margin-bottom: 8px;
+            color: var(--text-main);
         }
 
         .form-control {
@@ -259,20 +262,22 @@ else {
             border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
-            background: #f8fafc;
+            background: var(--background);
+            color: var(--text-main);
             transition: all 0.2s;
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            background: white;
+            background: var(--surface);
             box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
         }
 
         .form-control:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            background: var(--background);
         }
 
         .upload-toast {
@@ -292,7 +297,7 @@ else {
         .upload-toast.error { background: #fef2f2; color: var(--danger); border-color: #fecaca; }
 
         .page-top {
-            background: white;
+            background: var(--surface);
             padding: 32px 24px;
             border-bottom: 1px solid var(--border);
             text-align: center;
@@ -301,6 +306,7 @@ else {
             font-size: 28px;
             font-weight: 800;
             letter-spacing: -1px;
+            color: var(--text-main);
         }
     </style>
 </head>
