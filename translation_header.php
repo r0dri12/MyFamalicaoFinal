@@ -5,6 +5,8 @@
 $userLang = $_SESSION["language"] ?? 'pt';
 ?>
 <script src="theme_handler.js"></script>
+<!-- Link para o Manifesto PWA -->
+<link rel="manifest" href="manifest.json">
 <!-- Google Translate Logic -->
 <script>
     (function() {

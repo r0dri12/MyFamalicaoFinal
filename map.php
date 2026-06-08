@@ -32,8 +32,8 @@ $userLang = $_SESSION["language"] ?? 'pt';
     <!-- Phosphor Icons para ícones modernos -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="ui_notifications.css">
+    <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="ui_notifications.css?v=<?php echo time(); ?>">
     <style>
         .user-profile {
             display: flex;
@@ -193,21 +193,29 @@ $userLang = $_SESSION["language"] ?? 'pt';
                     <span class="user-name"><?php echo htmlspecialchars($_SESSION["username"]); ?></span>
                 </div>
             </div>
-            <a href="logout" class="btn-logout" title="Terminar Sessão">
-                <i class="ph-bold ph-sign-out"></i>
-            </a>
+            <div style="display: flex; gap: 8px;">
+                <button onclick="openAchievementsModal()" class="btn-logout" title="Minhas Conquistas" style="color: #ca8a04; background: none; border: none; cursor: pointer; font-size: 20px; display: flex; align-items: center; padding: 8px; border-radius: 8px; transition: background 0.2s;">
+                    <i class="ph-bold ph-trophy"></i>
+                </button>
+                <a href="logout" class="btn-logout" title="Terminar Sessão">
+                    <i class="ph-bold ph-sign-out"></i>
+                </a>
+            </div>
         </div>
-
-        <!-- Tradução Automática (Invisível mas 'presente' para o DOM) -->
 
 
         <section class="route-section">
             <div class="route-header">
                 <h2>O teu Roteiro</h2>
                 <span id="route-count" class="badge">0 locais</span>
-                <button class="btn-icon" id="btn-history" title="Histórico de Rotas" onclick="openHistoryModal()" style="background:var(--primary); color:white; width:30px; height:30px; border-radius:8px;">
-                    <i class="ph-bold ph-clock-counter-clockwise"></i>
-                </button>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn-icon" id="btn-smart-route" title="Gerar Roteiro Automático" onclick="openSmartRoutesModal()" style="background:#ca8a04; color:white; width:30px; height:30px; border:none; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                        <i class="ph-bold ph-magic-wand"></i>
+                    </button>
+                    <button class="btn-icon" id="btn-history" title="Histórico de Rotas" onclick="openHistoryModal()" style="background:var(--primary); color:white; width:30px; height:30px; border:none; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                        <i class="ph-bold ph-clock-counter-clockwise"></i>
+                    </button>
+                </div>
             </div>
             
             <div id="route-summary" class="route-summary" style="display:none;">
@@ -229,6 +237,10 @@ $userLang = $_SESSION["language"] ?? 'pt';
                     <i class="ph-bold ph-google-logo"></i>
                     Abrir no Google Maps
                 </button>
+                <button id="btn-export-pdf" class="btn btn-secondary" disabled onclick="exportRouteToPDF()">
+                    <i class="ph-bold ph-file-pdf"></i>
+                    Exportar Roteiro (PDF)
+                </button>
                 <button id="btn-save-route" class="btn btn-success" disabled onclick="openSaveRouteModal()" style="background:#10b981; color:white;">
                     <i class="ph-bold ph-floppy-disk"></i>
                     Guardar Rota
@@ -245,6 +257,14 @@ $userLang = $_SESSION["language"] ?? 'pt';
             </div>
         </section>
     </aside>
+
+    <!-- Widget de Clima Flutuante (canto superior direito) -->
+    <div id="weather-widget" class="weather-widget-floating" title="Estado do tempo em Famalicão">
+        <div class="weather-icon-float">
+            <i class="ph-bold ph-sun"></i>
+        </div>
+        <div class="weather-temp-float">--°C</div>
+    </div>
 
     <!-- Botão de Ajuda Flutuante -->
     <button class="btn-help" onclick="document.getElementById('helpModal').style.display='flex'">
@@ -380,6 +400,71 @@ $userLang = $_SESSION["language"] ?? 'pt';
             </div>
         </div>
     </div>
+
+    <!-- Modal para Gerar Roteiro Rápido -->
+    <div id="smartRoutesModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; text-align: center; position: relative;">
+            <button class="modal-close" onclick="document.getElementById('smartRoutesModal').style.display='none'">
+                <i class="ph-bold ph-x"></i>
+            </button>
+            <i class="ph-fill ph-magic-wand" style="font-size:48px; color:var(--primary); margin-bottom:16px; display: inline-block;"></i>
+            <h2 style="margin-bottom: 8px; color: var(--primary);">Gerador de Roteiro Rápido</h2>
+            <p style="color:var(--text-muted); margin-bottom:24px; font-size:14px;">Escolhe um perfil de viagem e nós criamos o melhor percurso por Famalicão.</p>
+            
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <button class="btn btn-secondary" onclick="generateSmartRoute('culture')" style="background:#eff6ff; color:var(--primary); border:1px solid #bfdbfe;">
+                    <i class="ph-bold ph-books"></i> Visita Cultural e Arte (1h)
+                </button>
+                <button class="btn btn-secondary" onclick="generateSmartRoute('nature')" style="background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;">
+                    <i class="ph-bold ph-tree"></i> Natureza e Monumentos (1.5h)
+                </button>
+                <button class="btn btn-primary" onclick="generateSmartRoute('full')">
+                    <i class="ph-bold ph-map-trifold"></i> Ver Todos os Pontos (2.5h)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Minhas Conquistas -->
+    <div id="achievementsModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px; position: relative;">
+            <button class="modal-close" onclick="document.getElementById('achievementsModal').style.display='none'">
+                <i class="ph-bold ph-x"></i>
+            </button>
+            <h2 style="margin-bottom: 8px; display:flex; align-items:center; gap:10px; color:var(--primary);">
+                <i class="ph-fill ph-trophy" style="color:#ca8a04;"></i> Conquistas de Famalicão
+            </h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Responde aos quizzes nos locais do mapa para desbloqueares as insígnias e completares o teu perfil!</p>
+            
+            <div id="achievements-list" class="achievements-grid">
+                <!-- Carregado dinamicamente via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal do Quiz Interativo -->
+    <div id="quizModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; position: relative;">
+            <button class="modal-close" onclick="closeQuizModal()">
+                <i class="ph-bold ph-x"></i>
+            </button>
+            <div style="text-align: center; margin-bottom: 16px;">
+                <i class="ph-fill ph-question" style="font-size:40px; color:#ca8a04; margin-bottom:8px; display:inline-block;"></i>
+                <h3 id="quiz-poi-name" style="font-size: 18px; font-weight:700;">Desafio: Nome do Ponto</h3>
+            </div>
+            
+            <p id="quiz-question-text" style="font-size: 14px; color: var(--text-main); font-weight:600; line-height:1.5; margin-bottom:20px; text-align: center;">Qual é a pergunta?</p>
+            
+            <div id="quiz-options-container" class="quiz-options">
+                <!-- Botões das opções carregados via JS -->
+            </div>
+            
+            <div id="quiz-feedback" style="margin-top: 16px; font-size:13px; font-weight:600; text-align:center; display:none;"></div>
+        </div>
+    </div>
+
+    <!-- Dependência de Canvas-Confetti para Celebrações -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <!-- Tradução Scripts -->
     <script type="text/javascript">

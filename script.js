@@ -234,10 +234,17 @@ fetch('api_custom_pois.php?t=' + new Date().getTime())
         }
     })
     .catch(error => console.error('Erro ao carregar POIs:', error));
-
 // Função genérica para adicionar marcadores
 function addMarkerToMap(poi, iconType) {
     const marker = L.marker(poi.coords, { icon: iconType }).addTo(map);
+
+    // Verificar se o ponto tem quiz (apenas pontos oficiais 1, 2, 3, 4)
+    const isOfficial = [1, 2, 3, 4].includes(Number(poi.id));
+    const quizButtonHtml = isOfficial 
+        ? `<button class="btn-quiz-mini" onclick="openQuiz('${poi.id}')" title="Responder ao Desafio Quiz" style="width:40px; height:40px; background:#fef9c3; color:#ca8a04; border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:20px;">
+               <i class="ph-fill ph-trophy"></i>
+           </button>` 
+        : '';
 
     // Conteúdo do Popup estilo moderno
     const popupContent = `
@@ -246,9 +253,10 @@ function addMarkerToMap(poi, iconType) {
             <h3>${poi.name}</h3>
             <p>${poi.description}</p>
             <div style="display:flex; gap:8px; margin-top:12px;">
-                <button class="add-poi-btn" onclick="addToRoute('${poi.id}')" style="flex:1;">
+                <button class="add-poi-btn" onclick="addToRoute('${poi.id}')" style="flex:1; background:var(--primary); color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:600; cursor:pointer;">
                     <i class="ph-bold ph-plus"></i> Adicionar
                 </button>
+                ${quizButtonHtml}
                 <button class="btn-audio-mini" onclick="speakPOI('${poi.id}')" title="Ouvir descrição" style="width:40px; height:40px; background:#eff6ff; color:var(--primary); border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:20px;">
                     <i class="ph-fill ph-speaker-high"></i>
                 </button>
@@ -258,7 +266,7 @@ function addMarkerToMap(poi, iconType) {
 
     marker.bindPopup(popupContent, {
         closeButton: true,
-        minWidth: 200
+        minWidth: 220
     });
 }
 
@@ -437,7 +445,6 @@ btnClear.addEventListener('click', async () => {
 function updateRouteUI() {
     const total = currentRoute.length;
     routeCount.textContent = `${total} locais`;
-
     if (total === 0) {
         routeList.innerHTML = `
             <li class="empty-state">
@@ -446,6 +453,8 @@ function updateRouteUI() {
             </li>
         `;
         btnExportGoogle.disabled = true;
+        const btnPdf = document.getElementById('btn-export-pdf');
+        if (btnPdf) btnPdf.disabled = true;
         btnClear.disabled = true;
         const btnSave = document.getElementById('btn-save-route');
         if (btnSave) btnSave.disabled = true;
@@ -453,6 +462,8 @@ function updateRouteUI() {
     }
 
     btnExportGoogle.disabled = false;
+    const btnPdf = document.getElementById('btn-export-pdf');
+    if (btnPdf) btnPdf.disabled = false;
     btnClear.disabled = false;
     const btnSave = document.getElementById('btn-save-route');
     if (btnSave) btnSave.disabled = false;
@@ -937,3 +948,491 @@ window.deleteRoute = async function (id) {
             });
     }
 };
+
+// =========================================
+// WEATHER INTEGRATION (Open-Meteo API)
+// =========================================
+function fetchWeather() {
+    const weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude=41.407&longitude=-8.519&current_weather=true';
+    
+    fetch(weatherUrl)
+        .then(res => res.json())
+        .then(data => {
+            if (data && data.current_weather) {
+                const temp = Math.round(data.current_weather.temperature);
+                const code = data.current_weather.weathercode;
+                
+                // Mapear código de clima do Open-Meteo para ícone/descrição
+                let iconClass = 'ph-sun';
+                let color = '#f59e0b';
+                let desc = 'Sol radiante!';
+                let recText = 'Dia fantástico para passear ao ar livre no Parque da Devesa!';
+                
+                if ([1, 2, 3].includes(code)) {
+                    iconClass = 'ph-cloud-sun';
+                    color = '#64748b';
+                    desc = 'Parcialmente nublado';
+                    recText = 'Excelente para um percurso pedestre por Famalicão!';
+                } else if ([45, 48].includes(code)) {
+                    iconClass = 'ph-cloud-fog';
+                    color = '#94a3b8';
+                    desc = 'Nevoeiro';
+                    recText = 'Cuidado com a visibilidade! Prefere visitas no centro urbano.';
+                } else if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)) {
+                    iconClass = 'ph-cloud-rain';
+                    color = '#3b82f6';
+                    desc = 'Chuva';
+                    recText = 'Está a chover. Que tal visitar o Museu Bernardino Machado ou a FCM? 🏛️';
+                } else if ([71, 73, 75, 77, 85, 86].includes(code)) {
+                    iconClass = 'ph-snowflake';
+                    color = '#93c5fd';
+                    desc = 'Neve';
+                    recText = 'Está muito frio lá fora! Agasalha-te bem ao explorar.';
+                } else if ([95, 96, 99].includes(code)) {
+                    iconClass = 'ph-cloud-lightning';
+                    color = '#7c3aed';
+                    desc = 'Trovoada';
+                    recText = 'Tempo severo. Recomendamos visitar espaços interiores.';
+                }
+                
+                // Atualizar UI do widget flutuante
+                const widget = document.getElementById('weather-widget');
+                if (widget) {
+                    widget.querySelector('.weather-icon-float').innerHTML = `<i class="ph-bold ${iconClass}" style="color: ${color};"></i>`;
+                    widget.querySelector('.weather-temp-float').innerHTML = `${temp}&deg;C`;
+                    widget.title = `${temp}°C - ${desc}. ${recText}`;
+                }
+            }
+        })
+        .catch(err => {
+            console.error('Erro ao obter dados meteorológicos:', err);
+            const widget = document.getElementById('weather-widget');
+            if (widget) {
+                widget.querySelector('.weather-temp-float').textContent = '--°C';
+            }
+        });
+}
+
+// Iniciar a busca ao carregar a página
+document.addEventListener('DOMContentLoaded', fetchWeather);
+
+// =========================================
+// SMART ROUTE GENERATOR
+// =========================================
+window.openSmartRoutesModal = function() {
+    document.getElementById('smartRoutesModal').style.display = 'flex';
+};
+
+window.generateSmartRoute = function(profile) {
+    document.getElementById('smartRoutesModal').style.display = 'none';
+    let selectedIds = [];
+    let routeName = '';
+
+    if (profile === 'culture') {
+        selectedIds = [2, 3]; // Bernardino Machado, Cupertino de Miranda
+        routeName = 'Roteiro Cultural';
+    } else if (profile === 'nature') {
+        selectedIds = [1, 4]; // Parque da Devesa, Igreja Matriz Nova
+        routeName = 'Roteiro Natureza & Fé';
+    } else if (profile === 'full') {
+        selectedIds = [1, 2, 3, 4]; // Todos
+        routeName = 'Roteiro Completo Famalicão';
+    }
+
+    // Filtrar os POIs oficiais correspondentes
+    const routePois = [];
+    selectedIds.forEach(id => {
+        const poi = pois.find(p => Number(p.id) === id);
+        if (poi) routePois.push(poi);
+    });
+
+    if (routePois.length > 0) {
+        currentRoute = [...routePois];
+        updateRouteUI();
+        myFama.toast(`${routeName} gerado com sucesso!`, 'success');
+
+        // Focar mapa nos limites da rota
+        const bounds = L.latLngBounds(currentRoute.map(p => p.coords));
+        map.fitBounds(bounds, { padding: [50, 50] });
+    }
+};
+
+// =========================================
+// ROUTE PDF EXPORT (Guia de Bolso)
+// =========================================
+window.exportRouteToPDF = function() {
+    if (currentRoute.length === 0) return;
+
+    // Criar um popup window HTML formatado para impressão
+    const printWindow = window.open('', '_blank', 'width=800,height=900');
+    
+    let itemsHtml = '';
+    currentRoute.forEach((poi, index) => {
+        itemsHtml += `
+            <div class="poi-card-print">
+                <div class="poi-header-print">
+                    <span class="poi-index-print">${index + 1}</span>
+                    <div class="poi-title-print">
+                        <h3>${poi.name}</h3>
+                        <span class="poi-type-print">${poi.type}</span>
+                    </div>
+                </div>
+                <div class="poi-body-print">
+                    ${poi.image ? `<img src="${poi.image}" class="poi-img-print" />` : ''}
+                    <div class="poi-desc-print">
+                        <p>${poi.description}</p>
+                        <p class="poi-coords-print"><strong>Coordenadas:</strong> Lat: ${poi.coords[0].toFixed(5)}, Lng: ${poi.coords[1].toFixed(5)}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>MyFamalicão - Guia de Roteiro</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+            <style>
+                body {
+                    font-family: 'Inter', sans-serif;
+                    color: #0f172a;
+                    background: #ffffff;
+                    padding: 40px;
+                    margin: 0;
+                }
+                .header-print {
+                    text-align: center;
+                    border-bottom: 2px solid #3b82f6;
+                    padding-bottom: 24px;
+                    margin-bottom: 30px;
+                }
+                .header-print h1 {
+                    font-size: 28px;
+                    font-weight: 800;
+                    margin: 0 0 8px 0;
+                    color: #3b82f6;
+                }
+                .header-print p {
+                    font-size: 14px;
+                    color: #64748b;
+                    margin: 0;
+                }
+                .poi-card-print {
+                    border: 1px solid #e2e8f0;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    page-break-inside: avoid;
+                }
+                .poi-header-print {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    margin-bottom: 16px;
+                }
+                .poi-index-print {
+                    background: #3b82f6;
+                    color: #ffffff;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 700;
+                    font-size: 16px;
+                }
+                .poi-title-print h3 {
+                    margin: 0;
+                    font-size: 18px;
+                    font-weight: 700;
+                }
+                .poi-type-print {
+                    font-size: 11px;
+                    text-transform: uppercase;
+                    font-weight: 700;
+                    color: #64748b;
+                }
+                .poi-body-print {
+                    display: flex;
+                    gap: 20px;
+                }
+                .poi-img-print {
+                    width: 150px;
+                    height: 100px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    flex-shrink: 0;
+                }
+                .poi-desc-print {
+                    flex: 1;
+                    font-size: 14px;
+                    line-height: 1.6;
+                    color: #334155;
+                }
+                .poi-desc-print p {
+                    margin: 0 0 8px 0;
+                }
+                .poi-coords-print {
+                    font-size: 12px;
+                    color: #64748b;
+                    margin-top: 12px !important;
+                }
+                .actions-print {
+                    text-align: center;
+                    margin-top: 30px;
+                    margin-bottom: 20px;
+                }
+                .btn-print {
+                    background: #3b82f6;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    font-size: 15px;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+                @media print {
+                    .actions-print {
+                        display: none;
+                    }
+                    body {
+                        padding: 0;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header-print">
+                <h1>Guia de Viagem - MyFamalicão</h1>
+                <p>Itinerário de visita personalizado criado em ${new Date().toLocaleDateString()}</p>
+            </div>
+            
+            ${itemsHtml}
+            
+            <div class="actions-print">
+                <button class="btn-print" onclick="window.print()">Imprimir / Guardar como PDF</button>
+            </div>
+        </body>
+        </html>
+    `;
+
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+};
+
+// =========================================
+// GAMIFICATION: QUIZZES & CONQUISTAS
+// =========================================
+
+// Dados dos Quizzes das atrações oficiais
+const quizzes = {
+    "1": {
+        question: "Qual é o principal rio que atravessa o Parque da Devesa?",
+        options: ["Rio Ave", "Rio Pelhe", "Rio Cávado"],
+        correct: 1, // "Rio Pelhe"
+        badgeKey: "badge_devesa",
+        badgeName: "Explorador da Devesa",
+        badgeIcon: "ph-tree",
+        badgeDesc: "Explorou e respondeu ao quiz do Parque da Devesa."
+    },
+    "2": {
+        question: "Bernardino Machado foi Presidente da República em Portugal por quantas vezes?",
+        options: ["Uma vez", "Duas vezes", "Três vezes"],
+        correct: 1, // "Duas vezes"
+        badgeKey: "badge_museu",
+        badgeName: "Historiador Local",
+        badgeIcon: "ph-books",
+        badgeDesc: "Conhece o legado de Bernardino Machado."
+    },
+    "3": {
+        question: "A Fundação Cupertino de Miranda é famosa por acolher o Centro de Estudos de que corrente artística?",
+        options: ["Impressionismo", "Surrealismo", "Cubismo"],
+        correct: 1, // "Surrealismo"
+        badgeKey: "badge_fcm",
+        badgeName: "Apreciador Surrealista",
+        badgeIcon: "ph-palette",
+        badgeDesc: "Decifrou o enigma surrealista da FCM."
+    },
+    "4": {
+        question: "A Igreja Matriz Nova é também conhecida como Igreja de...",
+        options: ["São Tiago", "Santo Adrião", "São Camilo"],
+        correct: 1, // "Santo Adrião"
+        badgeKey: "badge_igreja",
+        badgeName: "Devoto do Património",
+        badgeIcon: "ph-bank",
+        badgeDesc: "Descobriu o nome da Igreja Matriz Nova."
+    }
+};
+
+let activeQuizPoiId = null;
+let userUnlockedBadges = new Set();
+
+// Buscar conquistas desbloqueadas ao iniciar a app
+function fetchUserBadges() {
+    fetch('api_gamification.php')
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success' && data.badges) {
+                userUnlockedBadges = new Set(data.badges.map(b => b.badge_key));
+            }
+        })
+        .catch(err => console.error('Erro ao carregar conquistas:', err));
+}
+
+document.addEventListener('DOMContentLoaded', fetchUserBadges);
+
+// Abrir o Quiz
+window.openQuiz = function(poiId) {
+    const quiz = quizzes[poiId];
+    const poi = pois.find(p => String(p.id) === String(poiId));
+    if (!quiz || !poi) return;
+
+    activeQuizPoiId = poiId;
+    map.closePopup();
+
+    document.getElementById('quiz-poi-name').innerText = `Desafio: ${poi.name}`;
+    document.getElementById('quiz-question-text').innerText = quiz.question;
+
+    const optionsContainer = document.getElementById('quiz-options-container');
+    optionsContainer.innerHTML = '';
+    document.getElementById('quiz-feedback').style.display = 'none';
+
+    // Criar botões de opção
+    const letters = ['A', 'B', 'C', 'D'];
+    quiz.options.forEach((option, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option-btn';
+        btn.innerHTML = `<span class="quiz-letter">${letters[idx]}</span> ${option}`;
+        btn.onclick = () => selectQuizOption(idx, btn);
+        optionsContainer.appendChild(btn);
+    });
+
+    document.getElementById('quizModal').style.display = 'flex';
+};
+
+window.closeQuizModal = function() {
+    document.getElementById('quizModal').style.display = 'none';
+    activeQuizPoiId = null;
+};
+
+// Selecionar uma opção do quiz
+function selectQuizOption(index, buttonElement) {
+    const quiz = quizzes[activeQuizPoiId];
+    if (!quiz) return;
+
+    const buttons = document.querySelectorAll('.quiz-option-btn');
+    buttons.forEach(btn => btn.disabled = true); // Bloquear múltiplos cliques
+
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.style.display = 'block';
+
+    if (index === quiz.correct) {
+        buttonElement.classList.add('correct');
+        const letter = buttonElement.querySelector('.quiz-letter');
+        if (letter) letter.innerHTML = '✓';
+        
+        feedback.style.color = '#16a34a';
+        feedback.innerText = 'Resposta Correta! 🎉';
+
+        // Lançar confetes!
+        if (typeof confetti === 'function') {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // Enviar conquista para a BD
+        saveBadgeUnlock(quiz.badgeKey);
+        
+        // Fechar após 2 segundos
+        setTimeout(closeQuizModal, 2000);
+    } else {
+        buttonElement.classList.add('wrong');
+        const letter = buttonElement.querySelector('.quiz-letter');
+        if (letter) letter.innerHTML = '✗';
+        
+        feedback.style.color = '#ef4444';
+        feedback.innerText = 'Resposta incorreta. Tenta novamente!';
+        
+        // Re-habilitar opções após 1.5s
+        setTimeout(() => {
+            buttons.forEach(btn => btn.disabled = false);
+            buttonElement.classList.remove('wrong');
+            const letterEl = buttonElement.querySelector('.quiz-letter');
+            const idx = Array.from(buttons).indexOf(buttonElement);
+            if (letterEl) letterEl.innerHTML = ['A','B','C','D'][idx] || '';
+            feedback.style.display = 'none';
+        }, 1500);
+    }
+}
+
+// Gravar conquista na Base de Dados
+function saveBadgeUnlock(badgeKey) {
+    fetch('api_gamification.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ badge_key: badgeKey })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            if (data.unlocked) {
+                userUnlockedBadges.add(badgeKey);
+                myFama.toast("Nova conquista desbloqueada! Medalha adicionada ao perfil. 🏆", "success");
+            }
+        }
+    })
+    .catch(err => console.error('Erro ao guardar conquista:', err));
+}
+
+// Abrir Modal de Conquistas
+window.openAchievementsModal = function() {
+    // Carregar a lista de medalhas mais recente antes de abrir
+    fetch('api_gamification.php')
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success' && data.badges) {
+                userUnlockedBadges = new Set(data.badges.map(b => b.badge_key));
+            }
+            renderAchievements();
+            document.getElementById('achievementsModal').style.display = 'flex';
+        })
+        .catch(err => {
+            console.error('Erro ao carregar conquistas:', err);
+            renderAchievements();
+            document.getElementById('achievementsModal').style.display = 'flex';
+        });
+};
+
+// Renderizar Conquistas na Grelha
+function renderAchievements() {
+    const list = document.getElementById('achievements-list');
+    list.innerHTML = '';
+
+    Object.keys(quizzes).forEach(poiId => {
+        const quiz = quizzes[poiId];
+        const isUnlocked = userUnlockedBadges.has(quiz.badgeKey);
+
+        const card = document.createElement('div');
+        card.className = `badge-item ${isUnlocked ? 'unlocked' : 'locked'} ${isUnlocked ? quiz.badgeKey.replace('_', '-') : ''}`;
+
+        card.innerHTML = `
+            <div class="badge-img-wrapper">
+                <i class="ph-fill ${quiz.badgeIcon}"></i>
+            </div>
+            <div class="badge-title">${quiz.badgeName}</div>
+            <div class="badge-desc">${quiz.badgeDesc}</div>
+            <span style="font-size: 8px; font-weight:700; color: ${isUnlocked ? '#16a34a' : '#94a3b8'}; text-transform: uppercase;">
+                ${isUnlocked ? 'Desbloqueado' : 'Bloqueado'}
+            </span>
+        `;
+        list.appendChild(card);
+    });
+}
+

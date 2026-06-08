@@ -1,0 +1,18 @@
+{
+  "name": "MyFamalicão - Guia Interativo",
+  "short_name": "MyFamalicão",
+  "description": "Explora Vila Nova de Famalicão ao teu próprio ritmo.",
+  "start_url": "index.php",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -887,3 +887,273 @@ body {
         flex-direction: column;
     }
 }
+
+/* =========================================
+   NOVO: ESTILOS PARA AS NOVAS FUNCIONALIDADES
+   ========================================= */
+
+/* 1. Widget de Meteorologia Flutuante (canto superior direito) */
+.weather-widget-floating {
+    position: fixed;
+    top: 24px;
+    right: 150px; /* afastado do botão Ajuda (~110px largura + 24px + 16px gap) */
+    z-index: 1000;
+    background: var(--item-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow);
+    cursor: default;
+    transition: all 0.2s;
+}
+
+.weather-widget-floating:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.weather-icon-float {
+    font-size: 18px;
+    color: #f59e0b;
+    display: flex;
+    align-items: center;
+    animation: weather-bounce 3s infinite ease-in-out;
+}
+
+@keyframes weather-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.weather-temp-float {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+}
+
+[data-theme="dark"] .weather-widget-floating {
+    background: var(--surface);
+    backdrop-filter: blur(15px);
+}
+
+/* Mobile: ocultar o widget de clima em ecrãs muito pequenos */
+@media (max-width: 480px) {
+    .weather-widget-floating {
+        right: 12px;
+        top: 58px; /* abaixo do botão ajuda em mobile */
+    }
+}
+
+
+/* 2. Grelha de Conquistas / Insígnias */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+    padding: 8px 4px;
+}
+
+.badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    background: var(--background);
+    padding: 12px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.badge-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.badge-img-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estado Bloqueado */
+.badge-item.locked {
+    opacity: 0.5;
+}
+
+.badge-item.locked .badge-img-wrapper {
+    background: #e2e8f0;
+    color: #94a3b8;
+    filter: grayscale(1);
+}
+
+[data-theme="dark"] .badge-item.locked .badge-img-wrapper {
+    background: #334155;
+    color: #64748b;
+}
+
+/* Estado Desbloqueado com Gradientes Premium */
+.badge-item.unlocked .badge-img-wrapper {
+    background: linear-gradient(135deg, #fef08a, #facc15); /* Dourado default */
+    color: #854d0e;
+    animation: badge-unlock-glow 2s infinite alternate;
+}
+
+.badge-item.unlocked.badge-devesa .badge-img-wrapper {
+    background: linear-gradient(135deg, #bbf7d0, #22c55e); /* Verde */
+    color: #14532d;
+}
+
+.badge-item.unlocked.badge-museu .badge-img-wrapper {
+    background: linear-gradient(135deg, #bfdbfe, #3b82f6); /* Azul */
+    color: #1e3a8a;
+}
+
+.badge-item.unlocked.badge-fcm .badge-img-wrapper {
+    background: linear-gradient(135deg, #f5d0fe, #d946ef); /* Rosa/Roxo */
+    color: #701a75;
+}
+
+.badge-item.unlocked.badge-igreja .badge-img-wrapper {
+    background: linear-gradient(135deg, #ffedd5, #f97316); /* Laranja */
+    color: #7c2d12;
+}
+
+@keyframes badge-unlock-glow {
+    0% { box-shadow: 0 0 4px rgba(250, 204, 21, 0.2); }
+    100% { box-shadow: 0 0 12px rgba(250, 204, 21, 0.6); }
+}
+
+.badge-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.badge-desc {
+    font-size: 9px;
+    color: var(--text-muted);
+    line-height: 1.2;
+}
+
+/* 3. Opções do Quiz de Múltipla Escolha - Design Arredondado Premium */
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.quiz-option-btn {
+    background: var(--item-bg);
+    border: 2px solid var(--border);
+    color: var(--text-main);
+    padding: 13px 20px;
+    border-radius: 999px; /* Pill totalmente arredondado */
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    width: 100%;
+}
+
+.quiz-option-btn .quiz-letter {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+    transition: all 0.22s ease;
+}
+
+.quiz-option-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+}
+
+.quiz-option-btn:hover .quiz-letter {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+.quiz-option-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+/* Estado Correto */
+.quiz-option-btn.correct {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    border-color: #16a34a !important;
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4) !important;
+    transform: translateY(0);
+}
+
+.quiz-option-btn.correct .quiz-letter {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: white !important;
+}
+
+/* Estado Errado */
+.quiz-option-btn.wrong {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    border-color: #dc2626 !important;
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35) !important;
+    transform: translateY(0);
+}
+
+.quiz-option-btn.wrong .quiz-letter {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: white !important;
+}
+
+/* 4. Estilo do Marcador de Quiz no Popup */
+.btn-quiz-mini {
+    width: 40px;
+    height: 40px;
+    background: #fef9c3;
+    color: #ca8a04;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.2s;
+}
+
+.btn-quiz-mini:hover {
+    background: #fde047;
+    color: #854d0e;
+    transform: scale(1.05);
+}
