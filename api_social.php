@@ -121,6 +121,54 @@ try {
             $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode(["status" => "success", "comments" => $comments]);
         }
+
+        elseif ($action == 'add_to_my_map') {
+            // Verificar se o POI existe
+            $check_sql = "SELECT * FROM custom_pois WHERE id = :poi_id AND is_public = 1";
+            $stmt = $conn->prepare($check_sql);
+            $stmt->execute(['poi_id' => $poi_id]);
+            $poi = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$poi) {
+                echo json_encode(["status" => "error", "message" => "Ponto não encontrado ou privado."]);
+                exit;
+            }
+
+            // Verificar se o utilizador já adicionou este ponto
+            $check_dup = "SELECT id FROM custom_pois WHERE user_id = :user_id AND name = :name AND latitude = :lat AND longitude = :lng";
+            $stmt = $conn->prepare($check_dup);
+            $stmt->execute([
+                'user_id' => $user_id,
+                'name' => $poi['name'],
+                'lat' => $poi['latitude'],
+                'lng' => $poi['longitude']
+            ]);
+
+            if ($stmt->rowCount() > 0) {
+                echo json_encode(["status" => "error", "message" => "Este local já existe no teu mapa!"]);
+                exit;
+            }
+
+            // Criar cópia privada para o utilizador atual com flag was_cloned = 1
+            $sql = "INSERT INTO custom_pois (user_id, name, description, latitude, longitude, type, image, is_public, was_cloned) 
+                    VALUES (:user_id, :name, :description, :lat, :lng, :type, :image, 0, 1)";
+            $stmt = $conn->prepare($sql);
+            $success = $stmt->execute([
+                'user_id' => $user_id,
+                'name' => $poi['name'],
+                'description' => $poi['description'],
+                'lat' => $poi['latitude'],
+                'lng' => $poi['longitude'],
+                'type' => $poi['type'],
+                'image' => $poi['image']
+            ]);
+
+            if ($success) {
+                echo json_encode(["status" => "success", "message" => "Local adicionado ao teu mapa com sucesso!"]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Erro ao adicionar local."]);
+            }
+        }
     }
 }
 catch (Exception $e) {

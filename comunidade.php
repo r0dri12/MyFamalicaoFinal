@@ -237,6 +237,14 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             font-weight: 700;
             text-transform: uppercase;
         }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spin {
+            display: inline-block;
+            animation: spin 1s infinite linear;
+        }
     </style>
 </head>
 <body>
@@ -372,10 +380,16 @@ endif; ?>
                 <div class="poi-image" style="background-image: url('${image}')">
                     <span class="poi-type">${poi.type}</span>
                 </div>
-                <div class="poi-content">
+                <div class="poi-content" style="display: flex; flex-direction: column; flex-grow: 1;">
                     <div class="poi-owner"><i class="ph ph-user-circle"></i> por ${poi.owner_name}</div>
                     <h3>${poi.name}</h3>
-                    <p>${poi.description}</p>
+                    <p style="flex-grow: 1;">${poi.description}</p>
+                    
+                    <div style="margin-top:auto; padding-top:16px; border-top:1px solid var(--border);">
+                        <button class="btn btn-primary-sm" onclick="addToMyMap(${poi.id}, this)" style="width:100%; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <i class="ph-bold ph-plus-circle"></i> Adicionar ao meu mapa
+                        </button>
+                    </div>
                 </div>
                 <div class="poi-actions">
                     <button class="action-btn ${poi.user_liked > 0 ? 'liked' : ''}" onclick="toggleLike(${poi.id})">
@@ -466,6 +480,39 @@ endif; ?>
                 }
             } catch (err) {
                 myFama.toast("Erro ao enviar comentário.", "error");
+            }
+        }
+
+        async function addToMyMap(id, btn) {
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="ph-bold ph-spinner-gap spin"></i> A adicionar...`;
+            
+            try {
+                const res = await fetch('api_social.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'add_to_my_map', poi_id: id })
+                });
+                const data = await res.json();
+                
+                if (data.status === 'success') {
+                    myFama.toast(data.message, "success");
+                    btn.className = "btn btn-success-sm";
+                    btn.style.background = "#10b981";
+                    btn.style.color = "white";
+                    btn.style.borderColor = "#10b981";
+                    btn.innerHTML = `<i class="ph-bold ph-check-circle"></i> Adicionado`;
+                } else {
+                    myFama.toast(data.message, "info");
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            } catch (err) {
+                console.error(err);
+                myFama.toast("Erro ao processar o pedido.", "error");
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
             }
         }
     </script>

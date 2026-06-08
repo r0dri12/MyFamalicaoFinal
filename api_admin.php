@@ -32,7 +32,7 @@ try {
             $data['users'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         if ($type == 'all' || $type == 'routes') {
-            $stmt = $conn->query("SELECT r.*, u.username as owner_name FROM saved_routes r JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC");
+            $stmt = $conn->query("SELECT r.*, u.username as owner_name FROM saved_routes r JOIN users u ON r.user_id = u.id WHERE r.is_public = 1 ORDER BY r.created_at DESC");
             $data['routes'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         if ($type == 'all' || $type == 'pois') {
@@ -68,7 +68,7 @@ try {
         }
         elseif ($action == 'delete_route') {
             $id = $input->id;
-            $stmt = $conn->prepare("DELETE FROM saved_routes WHERE id = :id");
+            $stmt = $conn->prepare("DELETE FROM saved_routes WHERE id = :id AND is_public = 1");
             $stmt->execute(['id' => $id]);
             echo json_encode(["status" => "success", "message" => "Rota eliminada"]);
         }

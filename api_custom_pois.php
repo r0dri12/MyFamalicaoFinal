@@ -29,13 +29,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $stmt->bindParam(":is_public", $is_public, PDO::PARAM_INT);
             if($stmt->execute()){
                 $new_id = $conn->lastInsertId();
-                echo json_encode(["status" => "success", "message" => "Ponto criado", "poi" => ["id" => "custom_".$new_id, "name" => $data->name, "description" => $data->description, "lat" => $data->lat, "lng" => $data->lng, "type" => $type, "image" => $img, "is_public" => $is_public]]);
+                 echo json_encode(["status" => "success", "message" => "Ponto criado", "poi" => ["id" => "custom_".$new_id, "name" => $data->name, "description" => $data->description, "lat" => $data->lat, "lng" => $data->lng, "type" => $type, "image" => $img, "is_public" => $is_public, "was_cloned" => 0]]);
              } else { echo json_encode(["status" => "error", "message" => "Erro ao guardar"]); }
             unset($stmt);
         }
     } else { echo json_encode(["status" => "error", "message" => "Dados incompletos"]); }
 } else if($_SERVER["REQUEST_METHOD"] == "GET"){
-    $sql = "SELECT id, name, description, latitude as lat, longitude as lng, type, image FROM custom_pois WHERE user_id = :user_id";
+    $sql = "SELECT id, name, description, latitude as lat, longitude as lng, type, image, was_cloned FROM custom_pois WHERE user_id = :user_id";
     if($stmt = $conn->prepare($sql)){
         $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         if($stmt->execute()){
@@ -46,6 +46,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 if(empty($poi["type"])) $poi["type"] = "Outro";
                 if(empty($poi["image"])) $poi["image"] = $default_img;
                 $poi["coords"] = [(float)$poi["lat"], (float)$poi["lng"]];
+                $poi["was_cloned"] = (int)($poi["was_cloned"] ?? 0);
             }
             echo json_encode(["status" => "success", "pois" => $pois]);
         } else { echo json_encode(["status" => "error", "message" => "Erro ao carregar"]); }

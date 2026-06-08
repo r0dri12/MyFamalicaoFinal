@@ -213,10 +213,19 @@ pois.forEach(poi => {
     addMarkerToMap(poi, customIcon);
 });
 
-// Criar ícone para locais do utilizador
+// Criar ícone para locais do utilizador (Vermelhos criados por mim)
 const userIcon = L.divIcon({
     className: 'custom-map-marker user-poi-marker',
     html: `<div style="background-color: var(--danger, #ef4444); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); font-size: 18px;"><i class="ph-fill ph-star"></i></div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+});
+
+// Criar ícone para locais da comunidade (Roxos adicionados da comunidade)
+const communityIcon = L.divIcon({
+    className: 'custom-map-marker community-poi-marker',
+    html: `<div style="background-color: #8b5cf6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); font-size: 18px;"><i class="ph-fill ph-users-three"></i></div>`,
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
@@ -229,11 +238,15 @@ fetch('api_custom_pois.php?t=' + new Date().getTime())
         if (data.status === 'success' && data.pois) {
             data.pois.forEach(poi => {
                 pois.push(poi); // Adicionar à lista global
-                addMarkerToMap(poi, userIcon); // Adicionar ao mapa
+                
+                // Escolher ícone roxo se foi adicionado da comunidade, vermelho se foi criado por mim
+                const iconToUse = (Number(poi.was_cloned) === 1) ? communityIcon : userIcon;
+                addMarkerToMap(poi, iconToUse); // Adicionar ao mapa
             });
         }
     })
     .catch(error => console.error('Erro ao carregar POIs:', error));
+
 // Função genérica para adicionar marcadores
 function addMarkerToMap(poi, iconType) {
     const marker = L.marker(poi.coords, { icon: iconType }).addTo(map);
@@ -246,11 +259,15 @@ function addMarkerToMap(poi, iconType) {
            </button>` 
         : '';
 
+    // Mostrar autor do ponto se for um local da comunidade (ou seja, se tiver owner_name)
+    const ownerHtml = poi.owner_name ? `<span style="font-size:11px; color:var(--text-muted); display:inline-flex; align-items:center; gap:4px; margin-bottom:8px;"><i class="ph-bold ph-user-circle"></i> por ${poi.owner_name}</span>` : '';
+
     // Conteúdo do Popup estilo moderno
     const popupContent = `
         <div class="custom-popup">
             <img src="${poi.image}" alt="${poi.name}">
-            <h3>${poi.name}</h3>
+            <h3 style="margin-bottom:2px;">${poi.name}</h3>
+            ${ownerHtml}
             <p>${poi.description}</p>
             <div style="display:flex; gap:8px; margin-top:12px;">
                 <button class="add-poi-btn" onclick="addToRoute('${poi.id}')" style="flex:1; background:var(--primary); color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:600; cursor:pointer;">

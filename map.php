@@ -496,6 +496,9 @@ $userLang = $_SESSION["language"] ?? 'pt';
     <!-- Leaflet Routing Machine JS -->
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
     <script src="ui_notifications.js"></script>
+    <script>
+        const currentUserId = <?php echo (int)$_SESSION["id"]; ?>;
+    </script>
     <script src="script.js?v=<?php echo time(); ?>"></script>
     <?php include "translation_footer.php"; ?>
 </body>
