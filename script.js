@@ -458,6 +458,14 @@ function updateRouteUI() {
         btnClear.disabled = true;
         const btnSave = document.getElementById('btn-save-route');
         if (btnSave) btnSave.disabled = true;
+
+        // Apagar a linha desenhada no mapa
+        routingControl.setWaypoints([]);
+
+        // Esconder o resumo de km e tempo
+        const summaryDiv = document.getElementById('route-summary');
+        if (summaryDiv) summaryDiv.style.display = 'none';
+
         return;
     }
 
