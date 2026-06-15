@@ -174,7 +174,7 @@ endif; ?>
         </div>
 
         <div class="gallery-item">
-            <img class="gallery-img" src="https://www.famalicao.pt/op/image/?co=183709&h=8dc50" alt="Museu Bernardino Machado">
+            <img class="gallery-img" src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Palacete_Br%C3%A3o_da_Troviqueira.jpg" alt="Museu Bernardino Machado">
             <div class="gallery-content">
                 <span class="gallery-tag">Cultura</span>
                 <h3>Museu Bernardino Machado</h3>
