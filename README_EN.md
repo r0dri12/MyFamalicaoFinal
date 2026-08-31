@@ -4,8 +4,6 @@
 
 The project aims to promote **Vila Nova de Famalicão**, allowing users to discover points of interest, create personalized tourist routes, and explore the city through an interactive map.
 
-> Developed by **Rodrigo Afonso Loureiro de Frutuoso** — Agrupamento de Escolas Camilo Castelo Branco.
-
 ## ✨ Features
 
 - 🗺️ **Interactive map** with points of interest in Vila Nova de Famalicão
