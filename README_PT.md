@@ -4,7 +4,6 @@
 
 O projeto tem como objetivo promover **Vila Nova de Famalicão**, permitindo aos utilizadores descobrir pontos de interesse, criar roteiros personalizados e explorar a cidade através de um mapa interativo.
 
-> Projeto desenvolvido por **Rodrigo Afonso Loureiro de Frutuoso** — Agrupamento de Escolas Camilo Castelo Branco.
 
 ## ✨ Funcionalidades
 
